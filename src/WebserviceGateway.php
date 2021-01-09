@@ -2,14 +2,10 @@
 
 namespace Omnipay\Redsys;
 
-use Omnipay\Common\AbstractGateway;
-use Omnipay\Redsys\Message\CompletePurchaseRequest;
-use Omnipay\Redsys\Message\PurchaseRequest;
-
 /**
- * Redsys Webservice Gateway
+ * Redsys Webservice Gateway.
  *
- * @link http://www.redsys.es/
+ * @see http://www.redsys.es/
  */
 class WebserviceGateway extends RedirectGateway
 {
@@ -18,8 +14,8 @@ class WebserviceGateway extends RedirectGateway
         return 'Redsys Webservice';
     }
 
-    public function purchase(array $parameters = array())
+    public function purchase(array $parameters = [])
     {
-        return $this->createRequest('\Omnipay\Redsys\Message\WebservicePurchaseRequest', $parameters);
+        return $this->createRequest(\Omnipay\Redsys\Message\WebservicePurchaseRequest::class, $parameters);
     }
 }

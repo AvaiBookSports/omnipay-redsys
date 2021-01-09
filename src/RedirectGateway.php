@@ -3,13 +3,11 @@
 namespace Omnipay\Redsys;
 
 use Omnipay\Common\AbstractGateway;
-use Omnipay\Redsys\Message\CompletePurchaseRequest;
-use Omnipay\Redsys\Message\PurchaseRequest;
 
 /**
- * Redsys Redirect Gateway
+ * Redsys Redirect Gateway.
  *
- * @link http://www.redsys.es/
+ * @see http://www.redsys.es/
  */
 class RedirectGateway extends AbstractGateway
 {
@@ -20,13 +18,13 @@ class RedirectGateway extends AbstractGateway
 
     public function getDefaultParameters()
     {
-        return array(
+        return [
             'merchantId' => '',
             'merchantName' => '',
             'terminalId' => '',
             'hmacKey' => '',
             'testMode' => false,
-        );
+        ];
     }
 
     public function getMerchantId()
@@ -69,13 +67,18 @@ class RedirectGateway extends AbstractGateway
         return $this->setParameter('hmacKey', $value);
     }
 
-    public function purchase(array $parameters = array())
+    public function purchase(array $parameters = [])
     {
-        return $this->createRequest('\Omnipay\Redsys\Message\PurchaseRequest', $parameters);
+        return $this->createRequest(\Omnipay\Redsys\Message\PurchaseRequest::class, $parameters);
     }
 
-    public function completePurchase(array $parameters = array())
+    public function completePurchase(array $parameters = [])
     {
-        return $this->createRequest('\Omnipay\Redsys\Message\CompletePurchaseRequest', $parameters);
+        return $this->createRequest(\Omnipay\Redsys\Message\CompletePurchaseRequest::class, $parameters);
+    }
+
+    public function refund($parameters = [])
+    {
+        return $this->createRequest(\Omnipay\Redsys\Message\RefundRequest::class, $parameters);
     }
 }

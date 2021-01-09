@@ -5,7 +5,7 @@ namespace Omnipay\Redsys\Message;
 use Omnipay\Common\Exception\RuntimeException;
 
 /**
- * Security
+ * Security.
  *
  * This class provides common encoding, decoding and signing functions.
  * While all of this code could be called statically, it is left as a
@@ -19,9 +19,9 @@ class Security
     const VERSION = 'HMAC_SHA256_V1';
 
     /**
-     * Encode merchant parameters
+     * Encode merchant parameters.
      *
-     * @param array $data  The parameters to encode
+     * @param array $data The parameters to encode
      *
      * @return string Encoded data
      */
@@ -31,22 +31,22 @@ class Security
     }
 
     /**
-     * Decode merchant parameters
+     * Decode merchant parameters.
      *
-     * @param string $data  The encoded string of parameters
+     * @param string $data The encoded string of parameters
      *
      * @return array Decoded data
      */
     public function decodeMerchantParameters($data)
     {
-        return (array)json_decode(base64_decode(strtr($data, '-_', '+/')));
+        return (array) json_decode(base64_decode(strtr($data, '-_', '+/')));
     }
 
     /**
-     * Encrypt message with given key and default IV
+     * Encrypt message with given key and default IV.
      *
-     * @param string $message  The message to encrypt
-     * @param string $key      The base64-encoded key used to encrypt the message
+     * @param string $message The message to encrypt
+     * @param string $key     The base64-encoded key used to encrypt the message
      *
      * @return string Encrypted message
      *
@@ -55,7 +55,7 @@ class Security
     protected function encryptMessage($message, $key)
     {
         $key = base64_decode($key);
-        $iv = implode(array_map('chr', array(0, 0, 0, 0, 0, 0, 0, 0)));
+        $iv = implode(array_map('chr', [0, 0, 0, 0, 0, 0, 0, 0]));
 
         if ($this->hasValidEncryptionMethod()) {
             // OpenSSL needs to manually pad $message length to be mod 8 = 0; OPENSSL_ZERO_PADDING option doens't work
@@ -71,7 +71,7 @@ class Security
     }
 
     /**
-     * Check if the system has a valid encryption method available
+     * Check if the system has a valid encryption method available.
      *
      * @return bool
      */
@@ -81,28 +81,29 @@ class Security
     }
 
     /**
-     * Create signature hash used to verify messages
+     * Create signature hash used to verify messages.
      *
      * @todo Add if-check on algorithm to match against signature version as new param?
      *
-     * @param string $message  The message to encrypt
-     * @param string $salt     Unique salt used to generate the ciphertext
-     * @param string $key      The base64-encoded key used to encrypt the message
+     * @param string $message The message to encrypt
+     * @param string $salt    Unique salt used to generate the ciphertext
+     * @param string $key     The base64-encoded key used to encrypt the message
      *
      * @return string Generated signature
      */
     public function createSignature($message, $salt, $key)
     {
         $ciphertext = $this->encryptMessage($salt, $key);
+
         return base64_encode(hash_hmac('sha256', $message, $ciphertext, true));
     }
 
     /**
-     * Create signature hash used to verify messages back for Redirect gateway
+     * Create signature hash used to verify messages back for Redirect gateway.
      *
-     * @param string $message  The message to encrypt
-     * @param string $salt     Unique salt used to generate the ciphertext
-     * @param string $key      The base64-encoded key used to encrypt the message
+     * @param string $message The message to encrypt
+     * @param string $salt    Unique salt used to generate the ciphertext
+     * @param string $key     The base64-encoded key used to encrypt the message
      *
      * @return string Generated signature
      */

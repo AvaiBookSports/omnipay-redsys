@@ -1,5 +1,5 @@
 {
-    "name": "patronbase/omnipay-redsys",
+    "name": "avaibooksports/omnipay-redsys",
     "type": "library",
     "description": "Redsys driver for the Omnipay payment processing library",
     "keywords": [
@@ -31,7 +31,9 @@
         "psr-4": { "Omnipay\\Redsys\\" : "tests/" }
     },
     "require": {
-        "omnipay/common": "~3.0"
+        "omnipay/common": "~3.0",
+        "avaibooksports/redsys-messages": "^0.2",
+        "friendsofphp/php-cs-fixer": "^2.17"
     },
     "require-dev": {
         "omnipay/tests": "~3.0",

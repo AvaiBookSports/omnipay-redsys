@@ -3,7 +3,6 @@
 namespace Omnipay\Redsys;
 
 use Omnipay\Tests\GatewayTestCase;
-use Mockery as m;
 
 class RedirectGatewayTest extends GatewayTestCase
 {
@@ -16,7 +15,7 @@ class RedirectGatewayTest extends GatewayTestCase
 
         $this->gateway = new RedirectGateway($this->getHttpClient(), $this->getHttpRequest());
 
-        $this->options = array(
+        $this->options = [
             'amount' => '1.45',
             'currency' => 'EUR',
             'merchantId' => '999008881',
@@ -25,9 +24,9 @@ class RedirectGatewayTest extends GatewayTestCase
             'notifyUrl' => 'https://www.example.com/notify',
             'returnUrl' => 'https://www.example.com/return',
             'hmacKey' => 'Mk9m98IfEblmPfrpsawt7BmxObt98Jev',
-            'transactionId' => '123abc',
+            'transactionId' => '0123abc',
             'testMode' => true,
-        );
+        ];
     }
 
     public function testPurchase()
@@ -43,7 +42,7 @@ class RedirectGatewayTest extends GatewayTestCase
     public function testCompletePurchaseSuccess()
     {
         $this->getHttpRequest()->request->replace(
-            array(
+            [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
                 'Ds_MerchantParameters' => 'eyJEc19TaWduYXR1cmVWZXJzaW9uIjoiSE1BQ19TSEEyNTZfVjEiLCJEc19EYXRlIjoiMTBcLzE'
                     .'xXC8yMDE1IiwiRHNfSG91ciI6IjEyOjAwIiwiRHNfU2VjdXJlUGF5bWVudCI6IjEiLCJEc19BbW91bnQiOiIxNDUiLCJEc19D'
@@ -52,7 +51,7 @@ class RedirectGatewayTest extends GatewayTestCase
                     .'F0YSI6IlJlZjogOTl6eiIsIkRzX0F1dGhvcmlzYXRpb25Db2RlIjoiOTk5OTk5IiwiRHNfQ29uc3VtZXJMYW5ndWFnZSI6IjI'
                     .'iLCJEc19DYXJkX0NvdW50cnkiOiI3MjQifQ==',
                 'Ds_Signature' => 'wq466V5gAoRNWf_UyJfdS9VuNKElkHCfMQrTA0Oy4QE=',
-            )
+            ]
         );
 
         $response = $this->gateway->completePurchase($this->options)->send();
@@ -60,13 +59,13 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertTrue($response->isSuccessful());
         $this->assertFalse($response->isRedirect());
         $this->assertEquals('999999', $response->getTransactionReference());
-        $this->assertSame(0, (int) $response->getMessage());
+        $this->assertSame(0, (int) $response->getCode());
     }
 
     public function testCompletePurchaseFailure()
     {
         $this->getHttpRequest()->request->replace(
-            array(
+            [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
                 'Ds_MerchantParameters' => 'eyJEc19TaWduYXR1cmVWZXJzaW9uIjoiSE1BQ19TSEEyNTZfVjEiLCJEc19EYXRlIjoiMTBcLzE'
                     .'xXC8yMDE1IiwiRHNfSG91ciI6IjEyOjAwIiwiRHNfU2VjdXJlUGF5bWVudCI6IjAiLCJEc19BbW91bnQiOiIxNDUiLCJEc19D'
@@ -75,20 +74,20 @@ class RedirectGatewayTest extends GatewayTestCase
                     .'F0YSI6IlJlZjogOTl6eiIsIkRzX0F1dGhvcmlzYXRpb25Db2RlIjoiKysrKysrIiwiRHNfQ29uc3VtZXJMYW5ndWFnZSI6IjI'
                     .'iLCJEc19DYXJkX0NvdW50cnkiOiIwIn0=',
                 'Ds_Signature' => '4cB7506qDYAqG8022GHWT2LwSeGvF5Q1cn7NNAKTrRY=',
-            )
+            ]
         );
 
         $response = $this->gateway->completePurchase($this->options)->send();
 
         $this->assertFalse($response->isSuccessful());
         $this->assertFalse($response->isRedirect());
-        $this->assertSame(180, (int) $response->getMessage());
+        $this->assertSame(180, (int) $response->getCode());
     }
 
     public function testCompletePurchaseError()
     {
         $this->getHttpRequest()->request->replace(
-            array(
+            [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
                 'Ds_MerchantParameters' => 'eyJEc19TaWduYXR1cmVWZXJzaW9uIjoiSE1BQ19TSEEyNTZfVjEiLCJEc19EYXRlIjoiMTBcLzE'
                     .'xXC8yMDE1IiwiRHNfSG91ciI6IjEyOjAwIiwiRHNfU2VjdXJlUGF5bWVudCI6IjAiLCJEc19BbW91bnQiOiIxNDUiLCJEc19D'
@@ -97,13 +96,12 @@ class RedirectGatewayTest extends GatewayTestCase
                     .'F0YSI6IlJlZjogOTl6eiIsIkRzX0F1dGhvcmlzYXRpb25Db2RlIjoiKysrKysrIiwiRHNfQ29uc3VtZXJMYW5ndWFnZSI6IjI'
                     .'iLCJEc19DYXJkX0NvdW50cnkiOiIwIn0=',
                 'Ds_Signature' => 'YqXiWtntfc8bME-qgcsYsHggUApSBqICtXLTjQ7sFPc=',
-            )
+            ]
         );
 
         $response = $this->gateway->completePurchase($this->options)->send();
-
         $this->assertFalse($response->isSuccessful());
         $this->assertFalse($response->isRedirect());
-        $this->assertSame(909, (int) $response->getMessage());
+        $this->assertSame(909, (int) $response->getCode());
     }
 }

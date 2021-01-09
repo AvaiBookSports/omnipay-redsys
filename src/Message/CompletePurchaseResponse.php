@@ -2,29 +2,39 @@
 
 namespace Omnipay\Redsys\Message;
 
+use AvaiBookSports\Component\RedsysMessages\CatalogInterface;
+use AvaiBookSports\Component\RedsysMessages\Exception\CatalogNotFoundException;
+use AvaiBookSports\Component\RedsysMessages\Factory;
+use AvaiBookSports\Component\RedsysMessages\Loader\CatalogLoader;
+use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;
-use Omnipay\Common\Exception\InvalidResponseException;
 
 /**
- * Redsys Complete Purchase Response
+ * Redsys Complete Purchase Response.
  */
 class CompletePurchaseResponse extends AbstractResponse
 {
     /** @var array */
     protected $merchantParameters;
+
     /** @var string */
     protected $returnSignature;
-    /** @var boolean */
+
+    /** @var bool */
     protected $usingUpcaseParameters = false;
-    /** @var boolean */
+
+    /** @var bool */
     protected $usingUpcaseResponse = false;
 
+    /** @var CatalogInterface */
+    protected $redsysMessages;
+
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param RequestInterface $request the initiating request.
-     * @param mixed $data
+     * @param RequestInterface $request the initiating request
+     * @param mixed            $data
      *
      * @throws InvalidResponseException If merchant data or order number is missing, or signature does not match
      */
@@ -32,7 +42,13 @@ class CompletePurchaseResponse extends AbstractResponse
     {
         parent::__construct($request, $data);
 
-        $security = new Security;
+        $security = new Security();
+
+        try {
+            $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage(array_key_exists('language', $this->request->getParameters()) ? $this->request->getParameters()['language'] : 'en');
+        } catch (CatalogNotFoundException $e) {
+            $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage('en');
+        }
 
         if (!empty($data['Ds_MerchantParameters'])) {
             $this->merchantParameters = $security->decodeMerchantParameters($data['Ds_MerchantParameters']);
@@ -66,15 +82,26 @@ class CompletePurchaseResponse extends AbstractResponse
     /**
      * Is the response successful?
      *
-     * @return boolean
+     * @return bool
      */
     public function isSuccessful()
     {
         $key = $this->usingUpcaseParameters ? 'DS_RESPONSE' : 'Ds_Response';
+
         return isset($this->merchantParameters[$key])
             && is_numeric($this->merchantParameters[$key])
             && 0 <= $this->merchantParameters[$key]
             && 100 > $this->merchantParameters[$key];
+    }
+
+    /**
+     * Is the transaction cancelled by the user?
+     *
+     * @return bool
+     */
+    public function isCancelled()
+    {
+        return '9915' === $this->getCode();
     }
 
     /**
@@ -85,6 +112,7 @@ class CompletePurchaseResponse extends AbstractResponse
     public function getData()
     {
         $data = parent::getData();
+
         return is_array($data) && is_array($this->merchantParameters)
             ? array_merge($data, $this->merchantParameters)
             : $data;
@@ -95,20 +123,21 @@ class CompletePurchaseResponse extends AbstractResponse
      *
      * @param string $key The key to look up
      *
-     * @return null|mixed
+     * @return mixed|null
      */
     protected function getKey($key)
     {
         if ($this->usingUpcaseParameters) {
             $key = strtoupper($key);
         }
+
         return isset($this->merchantParameters[$key]) ? $this->merchantParameters[$key] : null;
     }
 
     /**
      * Get the authorisation code if available.
      *
-     * @return null|string
+     * @return string|null
      */
     public function getTransactionReference()
     {
@@ -116,11 +145,21 @@ class CompletePurchaseResponse extends AbstractResponse
     }
 
     /**
-     * Get the merchant response message if available.
+     * Get the merchant message if available.
      *
-     * @return null|string
+     * @return string|null A response message from the payment gateway
      */
     public function getMessage()
+    {
+        return $this->redsysMessages->getDsResponseMessage($this->getCode());
+    }
+
+    /**
+     * Get the merchant response code if available.
+     *
+     * @return string|null
+     */
+    public function getCode()
     {
         return $this->getKey('Ds_Response');
     }
@@ -128,7 +167,7 @@ class CompletePurchaseResponse extends AbstractResponse
     /**
      * Get the card type if available.
      *
-     * @return null|string
+     * @return string|null
      */
     public function getCardType()
     {

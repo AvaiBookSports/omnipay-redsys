@@ -14,27 +14,27 @@ class WebservicePurchaseRequestTest extends TestCase
     {
         $this->request = new WebservicePurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
         $this->request->initialize(
-            array(
-                'merchantId'       => '999008881',
-                'terminalId'       => '871',
-                'amount'           => '1.45',
-                'currency'         => 'EUR',
-                'transactionId'    => '123abc',
-                'hmacKey'          => 'Mk9m98IfEblmPfrpsawt7BmxObt98Jev',
-                'card'             => new CreditCard(array(
-                    'number'      => '4548812049400004',
+            [
+                'merchantId' => '999008881',
+                'terminalId' => '871',
+                'amount' => '1.45',
+                'currency' => 'EUR',
+                'transactionId' => '0123abc',
+                'hmacKey' => 'Mk9m98IfEblmPfrpsawt7BmxObt98Jev',
+                'card' => new CreditCard([
+                    'number' => '4548812049400004',
                     'expiryMonth' => '12',
-                    'expiryYear'  => '2020',
-                    'cvv'         => '285',
-                )),
+                    'expiryYear' => '2034',
+                    'cvv' => '123',
+                ]),
 
                 // undocumented fields
                 // 'description'      => 'My sales items',
                 // 'cardholder'       => 'J Smith',
-                'merchantName'     => 'My Store',
-                'consumerLanguage' => 'en',
-                'merchantData'     => 'Ref: 99zz',
-            )
+                'merchantName' => 'My Store',
+                'language' => 'en',
+                'merchantData' => 'Ref: 99zz',
+            ]
         );
     }
 
@@ -50,8 +50,8 @@ class WebservicePurchaseRequestTest extends TestCase
         $this->assertSame('0123abc', $data['DATOSENTRADA']['DS_MERCHANT_ORDER']);
 
         $this->assertSame('4548812049400004', $data['DATOSENTRADA']['DS_MERCHANT_PAN']);
-        $this->assertSame('2012', $data['DATOSENTRADA']['DS_MERCHANT_EXPIRYDATE']);
-        $this->assertSame('285', $data['DATOSENTRADA']['DS_MERCHANT_CVV2']);
+        $this->assertSame('3412', $data['DATOSENTRADA']['DS_MERCHANT_EXPIRYDATE']);
+        $this->assertSame('123', $data['DATOSENTRADA']['DS_MERCHANT_CVV2']);
 
         // $this->assertSame('My sales items', $data['DATOSENTRADA']['DS_MERCHANT_PRODUCTDESCRIPTION']);
         // $this->assertSame('J Smith', $data['DATOSENTRADA']['DS_MERCHANT_CARDHOLDER']);
@@ -61,7 +61,7 @@ class WebservicePurchaseRequestTest extends TestCase
 
         $this->assertSame('HMAC_SHA256_V1', $data['DS_SIGNATUREVERSION']);
         // signature will change if undocumented fields added
-        $this->assertSame('1RPtKuPpDldIa88VBPugTqm5BWJxoUWT0503BM/U5l4=', $data['DS_SIGNATURE']);
+        $this->assertSame('iqlFsIxsox35H0yHuaTiZeZ3Ok/4C8omyCuK698gKjI=', $data['DS_SIGNATURE']);
     }
 
     public function testGetHmacKey()

@@ -7,34 +7,25 @@ use SimpleXMLElement;
 /**
  * Redsys Webservice Purchase Request.
  */
-class WebservicePurchaseRequest extends AbstractRequest
+class RefundRequest extends AbstractRequest
 {
     use WebserviceTrait;
 
     public function getData()
     {
-        $this->validate('merchantId', 'terminalId', 'amount', 'currency', 'card');
-
-        $card = $this->getCard();
-        // test cards aparently don't validate
-        if (!$this->getTestMode()) {
-            $card->validate();
-        }
+        $this->validate('merchantId', 'terminalId', 'amount', 'currency', 'transactionId');
 
         $data = [
             'DS_MERCHANT_AMOUNT' => $this->getAmountInteger(),
             'DS_MERCHANT_ORDER' => $this->getTransactionId(),
             'DS_MERCHANT_MERCHANTCODE' => $this->getMerchantId(),
-            'DS_MERCHANT_CURRENCY' => $this->getCurrencyNumeric(),  // uses ISO-4217 codes
-            'DS_MERCHANT_PAN' => $card->getNumber(),
-            'DS_MERCHANT_CVV2' => $card->getCvv(),
-            'DS_MERCHANT_TRANSACTIONTYPE' => 'A',                          // 'Traditional payment'
             'DS_MERCHANT_TERMINAL' => $this->getTerminalId(),
-            'DS_MERCHANT_EXPIRYDATE' => $card->getExpiryDate('ym'),
+            'DS_MERCHANT_CURRENCY' => $this->getCurrencyNumeric(),  // uses ISO-4217 codes
+            'DS_MERCHANT_TRANSACTIONTYPE' => '3',                          // Refund
             // undocumented fields
-            'DS_MERCHANT_MERCHANTDATA' => $this->getMerchantData(),
-            'DS_MERCHANT_MERCHANTNAME' => $this->getMerchantName(),
-            'DS_MERCHANT_CONSUMERLANGUAGE' => $this->getConsumerLanguage(),
+            // 'DS_MERCHANT_MERCHANTDATA'     => $this->getMerchantData(),
+            // 'DS_MERCHANT_MERCHANTNAME'     => $this->getMerchantName(),
+            // 'DS_MERCHANT_CONSUMERLANGUAGE' => $this->getConsumerLanguage(),
         ];
 
         $request = new SimpleXMLElement('<REQUEST/>');
@@ -113,6 +104,6 @@ class WebservicePurchaseRequest extends AbstractRequest
         // convert to nested arrays (drop the 'true' to use simple objects)
         $responseData = json_decode(json_encode($responseData), true);
 
-        return $this->response = new WebservicePurchaseResponse($this, $responseData);
+        return $this->response = new RefundResponse($this, $responseData);
     }
 }

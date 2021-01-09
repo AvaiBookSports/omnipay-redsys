@@ -12,7 +12,7 @@ use Omnipay\Common\Message\RequestInterface;
 /**
  * Redsys Purchase Response.
  */
-class WebservicePurchaseResponse extends AbstractResponse
+class RefundResponse extends AbstractResponse
 {
     /** @var string */
     protected $returnSignature;
@@ -62,41 +62,11 @@ class WebservicePurchaseResponse extends AbstractResponse
         if (isset($data['OPERACION']['DS_ORDER'])) {
             $this->usingUpcaseResponse = true;
         }
-
-        $order = $this->GetKey('Ds_Order');
-        if (null === $order) {
-            throw new InvalidResponseException();
-        }
-
-        $signature_keys = [
-            'Ds_Amount',
-            'Ds_Order',
-            'Ds_MerchantCode',
-            'Ds_Currency',
-            'Ds_Response',
-            'Ds_TransactionType',
-            'Ds_SecurePayment',
-        ];
-        $signature_data = '';
-        foreach ($signature_keys as $key) {
-            $value = $this->getKey($key);
-            if (null === $value) {
-                throw new InvalidResponseException('Invalid response from payment gateway (missing data)');
-            }
-            $signature_data .= $value;
-        }
-
-        $this->returnSignature = $security->createSignature(
-            $signature_data,
-            $order,
-            $this->request->getHmacKey()
-        );
-
-        if ($this->returnSignature != $this->GetKey('Ds_Signature')) {
-            throw new InvalidResponseException('Invalid response from payment gateway (signature mismatch)');
-        }
     }
 
+    /**
+     * @return bool
+     */
     public function isSuccessful()
     {
         $response_code = $this->getKey('Ds_Response');
@@ -106,8 +76,7 @@ class WebservicePurchaseResponse extends AbstractResponse
             && '0' == $this->data['CODIGO']
             && null !== $response_code
             && is_numeric($response_code)
-            && 0 <= $response_code
-            && 100 > $response_code;
+            && 900 == $response_code;
     }
 
     /**

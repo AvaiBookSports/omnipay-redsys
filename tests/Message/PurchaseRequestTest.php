@@ -13,22 +13,22 @@ class PurchaseRequestTest extends TestCase
     {
         $this->request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
         $this->request->initialize(
-            array(
-                'merchantId'       => '999008881',
-                'terminalId'       => '871',
-                'amount'           => '1.45',
-                'currency'         => 'EUR',
-                'transactionId'    => '123abc',
-                'hmacKey'          => 'Mk9m98IfEblmPfrpsawt7BmxObt98Jev',
+            [
+                'merchantId' => '999008881',
+                'terminalId' => '871',
+                'amount' => '1.45',
+                'currency' => 'EUR',
+                'transactionId' => '0123abc',
+                'hmacKey' => 'Mk9m98IfEblmPfrpsawt7BmxObt98Jev',
 
-                'description'      => 'My sales items',
-                'cardholder'       => 'J Smith',
-                'notifyUrl'        => 'https://www.example.com/notify',
-                'returnUrl'        => 'https://www.example.com/return',
-                'merchantName'     => 'My Store',
-                'consumerLanguage' => 'en',
-                'merchantData'     => 'Ref: 99zz',
-            )
+                'description' => 'My sales items',
+                'cardholder' => 'J Smith',
+                'notifyUrl' => 'https://www.example.com/notify',
+                'returnUrl' => 'https://www.example.com/return',
+                'merchantName' => 'My Store',
+                'language' => 'en',
+                'merchantData' => 'Ref: 99zz',
+            ]
         );
     }
 
@@ -66,13 +66,18 @@ class PurchaseRequestTest extends TestCase
         $this->assertSame('Mk9m98IfEblmPfrpsawt7BmxObt98Jev', $this->request->getHmacKey());
     }
 
-    public function testSetConsumerLanguage()
+    public function testSetLanguage()
     {
-        $this->request->setConsumerLanguage(1);
+        $this->request->setLanguage('es');
         $this->assertSame('001', $this->request->getConsumerLanguage());
-        $this->request->setConsumerLanguage(99); // invalid, forces 1
-        $this->assertSame('001', $this->request->getConsumerLanguage());
-        $this->request->setConsumerLanguage('en');
+        $this->assertSame('es', $this->request->getLanguage());
+
+        $this->request->setLanguage('foo'); // invalid, forces english
         $this->assertSame('002', $this->request->getConsumerLanguage());
+        $this->assertSame('en', $this->request->getLanguage());
+
+        $this->request->setLanguage('fr');
+        $this->assertSame('004', $this->request->getConsumerLanguage());
+        $this->assertSame('fr', $this->request->getLanguage());
     }
 }

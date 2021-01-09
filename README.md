@@ -42,6 +42,12 @@ The following gateways are provided by this package:
 For general usage instructions, please see the main [Omnipay](https://github.com/thephpleague/omnipay)
 repository.
 
+## Translating Redsys messages
+
+Each Redsys response code has a message for it. Spanish messages are fully implemented with the provided ones by Redsys documentation.
+
+You can help improving those messages and adding translations in [avaibooksports/redsys-messages](https://github.com/AvaiBookSports/redsys-messages)
+
 ## Support
 
 If you are having general issues with Omnipay, we suggest posting on

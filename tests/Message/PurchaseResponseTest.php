@@ -10,7 +10,7 @@ class PurchaseResponseTest extends TestCase
     private $response;
 
     /**
-     * Set up for the tests in this class
+     * Set up for the tests in this class.
      *
      * Uses the following data:
      *
@@ -32,7 +32,7 @@ class PurchaseResponseTest extends TestCase
      */
     public function setUp()
     {
-        $this->response = new PurchaseResponse($this->getMockRequest(), array(
+        $this->response = new PurchaseResponse($this->getMockRequest(), [
             'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
             'Ds_MerchantParameters' => 'eyJEc19NZXJjaGFudF9NZXJjaGFudENvZGUiOiI5OTkwMDg4ODEiLCJEc19NZXJjaGFudF9UZXJtaW5'
                 .'hbCI6Ijg3MSIsIkRzX01lcmNoYW50X1RyYW5zYWN0aW9uVHlwZSI6IjAiLCJEc19NZXJjaGFudF9BbW91bnQiOiIxNDUiLCJEc19N'
@@ -43,7 +43,7 @@ class PurchaseResponseTest extends TestCase
                 .'XC9yZXR1cm4iLCJEc19NZXJjaGFudF9NZXJjaGFudE5hbWUiOiJNeSBTdG9yZSIsIkRzX01lcmNoYW50X0NvbnN1bWVyTGFuZ3VhZ'
                 .'2UiOiIwMDIiLCJEc19NZXJjaGFudF9NZXJjaGFudERhdGEiOiJSZWY6IDk5enoifQ==',
             'Ds_Signature' => 'dEYvw2ti+iUS9+sc1U8klNdLpoFPO08hRRzd9LLmLWs=',
-        ));
+        ]);
     }
 
     public function testPurchaseSuccess()
@@ -56,7 +56,7 @@ class PurchaseResponseTest extends TestCase
         $this->assertSame('https://sis-t.redsys.es:25443/sis/realizarPago', $this->response->getRedirectUrl());
         $this->assertSame('POST', $this->response->getRedirectMethod());
         $this->assertSame(
-            array(
+            [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
                 'Ds_MerchantParameters' => 'eyJEc19NZXJjaGFudF9NZXJjaGFudENvZGUiOiI5OTkwMDg4ODEiLCJEc19NZXJjaGFudF9UZXJ'
                     .'taW5hbCI6Ijg3MSIsIkRzX01lcmNoYW50X1RyYW5zYWN0aW9uVHlwZSI6IjAiLCJEc19NZXJjaGFudF9BbW91bnQiOiIxNDUi'
@@ -67,10 +67,10 @@ class PurchaseResponseTest extends TestCase
                     .'L1wvd3d3LmV4YW1wbGUuY29tXC9yZXR1cm4iLCJEc19NZXJjaGFudF9NZXJjaGFudE5hbWUiOiJNeSBTdG9yZSIsIkRzX01lc'
                     .'mNoYW50X0NvbnN1bWVyTGFuZ3VhZ2UiOiIwMDIiLCJEc19NZXJjaGFudF9NZXJjaGFudERhdGEiOiJSZWY6IDk5enoifQ==',
                 'Ds_Signature' => 'dEYvw2ti+iUS9+sc1U8klNdLpoFPO08hRRzd9LLmLWs=',
-            ),
+            ],
             $this->response->getRedirectData()
         );
         $this->assertNull($this->response->getTransactionReference());
-        $this->assertNull($this->response->getMessage());
+        $this->assertNull($this->response->getCode());
     }
 }
