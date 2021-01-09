@@ -1,4 +1,4 @@
-# Omnipay: Redsyshttps://poser.pugx.org
+# Omnipay: Redsys
 
 **Redsys driver for the Omnipay PHP payment processing library**
 
