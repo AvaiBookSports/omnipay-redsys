@@ -77,7 +77,7 @@ class RedirectGateway extends AbstractGateway
         return $this->createRequest(\Omnipay\Redsys\Message\CompletePurchaseRequest::class, $parameters);
     }
 
-    public function refund($parameters = [])
+    public function refund(array $parameters = [])
     {
         return $this->createRequest(\Omnipay\Redsys\Message\RefundRequest::class, $parameters);
     }
