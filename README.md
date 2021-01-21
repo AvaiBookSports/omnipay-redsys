@@ -2,7 +2,7 @@
 
 **Redsys driver for the Omnipay PHP payment processing library**
 
-[![Build Status](https://travis-ci.org/AvaiBookSports/omnipay-redsys.png?branch=master)](https://travis-ci.org/AvaiBookSports/omnipay-redsys)
+[![Build Status](https://travis-ci.com/AvaiBookSports/omnipay-redsys.png?branch=master)](https://travis-ci.com/AvaiBookSports/omnipay-redsys)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/AvaiBookSports/omnipay-redsys.svg?style=flat)](https://scrutinizer-ci.com/g/AvaiBookSports/omnipay-redsys/code-structure)
 [![Code Quality](https://img.shields.io/scrutinizer/g/AvaiBookSports/omnipay-redsys.svg?style=flat)](https://scrutinizer-ci.com/g/AvaiBookSports/omnipay-redsys/?branch=master)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE)
