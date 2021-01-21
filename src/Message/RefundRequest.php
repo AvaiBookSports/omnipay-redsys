@@ -11,6 +11,9 @@ class RefundRequest extends AbstractRequest
 {
     use WebserviceTrait;
 
+    /** @var CatalogInterface */
+    protected $redsysMessages;
+
     public function getData()
     {
         $this->validate('merchantId', 'terminalId', 'amount', 'currency', 'transactionId');
@@ -97,9 +100,9 @@ class RefundRequest extends AbstractRequest
         ));
 
         // remove any reflected request data (this happens on SIS errors, and includes card number)
-        if (isset($responseData->RECIBIDO)) {
-            unset($responseData->RECIBIDO);
-        }
+        // if (isset($responseData->RECIBIDO)) {
+        //     unset($responseData->RECIBIDO);
+        // }
 
         // convert to nested arrays (drop the 'true' to use simple objects)
         $responseData = json_decode(json_encode($responseData), true);

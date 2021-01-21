@@ -6,13 +6,10 @@ use Omnipay\Tests\TestCase;
 
 class RefundRequestTest extends TestCase
 {
-    /** @var RefundRequest */
-    private $request;
-
-    public function setUp()
+    public function testGetData()
     {
-        $this->request = new RefundRequest($this->getHttpClient(), $this->getHttpRequest());
-        $this->request->initialize(
+        $request = new RefundRequest($this->getHttpClient(), $this->getHttpRequest());
+        $request->initialize(
             [
                 'merchantId' => '999008881',
                 'terminalId' => '871',
@@ -22,11 +19,8 @@ class RefundRequestTest extends TestCase
                 'hmacKey' => 'Mk9m98IfEblmPfrpsawt7BmxObt98Jev',
             ]
         );
-    }
 
-    public function testGetData()
-    {
-        $data = $this->request->getData();
+        $data = $request->getData();
 
         $this->assertSame('999008881', $data['DATOSENTRADA']['DS_MERCHANT_MERCHANTCODE']);
         $this->assertSame('871', $data['DATOSENTRADA']['DS_MERCHANT_TERMINAL']);
@@ -42,14 +36,38 @@ class RefundRequestTest extends TestCase
 
     public function testGetHmacKey()
     {
-        $this->assertSame('Mk9m98IfEblmPfrpsawt7BmxObt98Jev', $this->request->getHmacKey());
+        $request = new RefundRequest($this->getHttpClient(), $this->getHttpRequest());
+        $request->initialize(
+            [
+                'merchantId' => '999008881',
+                'terminalId' => '871',
+                'amount' => '1.45',
+                'currency' => 'EUR',
+                'transactionId' => '0123abc',
+                'hmacKey' => 'Mk9m98IfEblmPfrpsawt7BmxObt98Jev',
+            ]
+        );
+
+        $this->assertSame('Mk9m98IfEblmPfrpsawt7BmxObt98Jev', $request->getHmacKey());
     }
 
     public function testGetDataTestMode()
     {
-        $this->request->setTestMode(true);
-        $this->assertSame('https://sis-t.redsys.es:25443/sis/services/SerClsWSEntrada', $this->request->getEndpoint());
-        $this->request->setTestMode(false);
-        $this->assertSame('https://sis.redsys.es/sis/services/SerClsWSEntrada', $this->request->getEndpoint());
+        $request = new RefundRequest($this->getHttpClient(), $this->getHttpRequest());
+        $request->initialize(
+            [
+                'merchantId' => '999008881',
+                'terminalId' => '871',
+                'amount' => '1.45',
+                'currency' => 'EUR',
+                'transactionId' => '0123abc',
+                'hmacKey' => 'Mk9m98IfEblmPfrpsawt7BmxObt98Jev',
+            ]
+        );
+
+        $request->setTestMode(true);
+        $this->assertSame('https://sis-t.redsys.es:25443/sis/services/SerClsWSEntrada', $request->getEndpoint());
+        $request->setTestMode(false);
+        $this->assertSame('https://sis.redsys.es/sis/services/SerClsWSEntrada', $request->getEndpoint());
     }
 }

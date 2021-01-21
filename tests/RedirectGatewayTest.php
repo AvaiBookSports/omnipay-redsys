@@ -104,4 +104,27 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertFalse($response->isRedirect());
         $this->assertSame(909, (int) $response->getCode());
     }
+
+    public function testRefundSuccess()
+    {
+        $this->setMockHttpResponse('RefundSuccess.txt');
+
+        $response = $this->gateway->refund($this->options)->send();
+        // var_dump($response->getCode());
+        // exit;
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame(900, (int) $response->getCode());
+    }
+
+    public function testRefundError()
+    {
+        $this->setMockHttpResponse('RefundError.txt');
+
+        $response = $this->gateway->refund($this->options)->send();
+
+        $this->assertFalse($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame(180, (int) $response->getCode());
+    }
 }

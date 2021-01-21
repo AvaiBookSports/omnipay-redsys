@@ -2,6 +2,9 @@
 
 namespace Omnipay\Redsys\Message;
 
+use AvaiBookSports\Component\RedsysMessages\Exception\CatalogNotFoundException;
+use AvaiBookSports\Component\RedsysMessages\Factory;
+use AvaiBookSports\Component\RedsysMessages\Loader\CatalogLoader;
 use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Common\Message\AbstractRequest as MessageAbstractRequest;
 
@@ -70,8 +73,6 @@ abstract class AbstractRequest extends MessageAbstractRequest
      */
     public function setLanguage($value)
     {
-        $value = array_key_exists($value, self::$consumerLanguages) ? $value : 'en';
-
         return $this->setParameter('language', $value);
     }
 
@@ -85,7 +86,7 @@ abstract class AbstractRequest extends MessageAbstractRequest
         $language = $this->getLanguage() ?: 'en';
 
         if (!array_key_exists($language, self::$consumerLanguages)) {
-            $language = $this->getLanguage() ?: 'en';
+            $language = 'en';
             // throw new OmnipayException(sprintf('Language "%s" is not supported by the gateway', $language));
         }
 
@@ -154,5 +155,14 @@ abstract class AbstractRequest extends MessageAbstractRequest
         }
 
         parent::setTransactionId($value);
+    }
+
+    public function getMessageCatalog()
+    {
+        try {
+            return (new Factory(new CatalogLoader()))->createCatalogByLanguage($this->getLanguage() ?: 'en');
+        } catch (CatalogNotFoundException $e) {
+            return (new Factory(new CatalogLoader()))->createCatalogByLanguage('en');
+        }
     }
 }
