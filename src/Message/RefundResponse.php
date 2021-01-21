@@ -57,7 +57,7 @@ class RefundResponse extends AbstractResponse
 
         // Exceeder API rate limit
         if ('SIS0295' == $data['CODIGO'] || '9295' == $data['CODIGO']) {
-            throw new RequestException('Too many requests. "'.$data['CODIGO'].'"', MessageFactoryDiscovery::find()->createRequest('POST', $this->getRequest()->getEndpoint(), ['SOAPAction' => 'trataPeticion'] /* $requestEnvelope */));
+            throw new RequestException('Too many requests. "'.$data['CODIGO'].'"', MessageFactoryDiscovery::find()->createRequest('POST', $this->getRequest()->getEndpoint(), ['SOAPAction' => 'trataPeticion']));
         }
 
         if (isset($data['OPERACION']['DS_ORDER'])) {
