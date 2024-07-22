@@ -43,11 +43,6 @@
     "suggest": {
         "ext-openssl": "Required for hashing functions to check message signatures"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.0.x-dev"
-        }
-    },
     "prefer-stable": true,
     "config": {
         "allow-plugins": {
