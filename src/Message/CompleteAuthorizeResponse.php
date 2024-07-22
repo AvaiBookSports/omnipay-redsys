@@ -1,21 +1,28 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Omnipay\Redsys\Message;
 
+use AvaiBookSports\Component\RedsysMessages\CatalogInterface;
 use AvaiBookSports\Component\RedsysMessages\Exception\CatalogNotFoundException;
 use AvaiBookSports\Component\RedsysMessages\Factory;
 use AvaiBookSports\Component\RedsysMessages\Loader\CatalogLoader;
-use Http\Discovery\MessageFactoryDiscovery;
 use Omnipay\Common\Exception\InvalidResponseException;
-use Omnipay\Common\Http\Exception\RequestException;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;
 
+/**
+ * Redsys Complete Purchase Response.
+ */
 class CompleteAuthorizeResponse extends AbstractResponse
 {
+    /** @var array */
+    protected $merchantParameters;
+
+    /** @var string */
     protected $returnSignature;
+
+    /** @var bool */
+    protected $usingUpcaseParameters = false;
 
     /** @var bool */
     protected $usingUpcaseResponse = false;
@@ -23,6 +30,14 @@ class CompleteAuthorizeResponse extends AbstractResponse
     /** @var CatalogInterface */
     protected $redsysMessages;
 
+    /**
+     * Constructor.
+     *
+     * @param RequestInterface $request the initiating request
+     * @param mixed            $data
+     *
+     * @throws InvalidResponseException If merchant data or order number is missing, or signature does not match
+     */
     public function __construct(RequestInterface $request, $data)
     {
         parent::__construct($request, $data);
@@ -35,93 +50,76 @@ class CompleteAuthorizeResponse extends AbstractResponse
             $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage('en');
         }
 
-        if (!isset($data['CODIGO'])) {
+        if (!empty($data['Ds_MerchantParameters'])) {
+            $this->merchantParameters = $security->decodeMerchantParameters($data['Ds_MerchantParameters']);
+        } elseif (!empty($data['DS_MERCHANTPARAMETERS'])) {
+            $this->merchantParameters = $security->decodeMerchantParameters($data['DS_MERCHANTPARAMETERS']);
+            $this->usingUpcaseResponse = true;
+        } else {
             throw new InvalidResponseException('Invalid response from payment gateway (no data)');
         }
 
-        if (!isset($data['OPERACION'])) {
-            if ('0' == $data['CODIGO']) {
-                throw new InvalidResponseException('Invalid response from payment gateway (no data)');
-            }
+        if (!empty($this->merchantParameters['Ds_Order'])) {
+            $order = $this->merchantParameters['Ds_Order'];
+        } elseif (!empty($this->merchantParameters['DS_ORDER'])) {
+            $order = $this->merchantParameters['DS_ORDER'];
+            $this->usingUpcaseParameters = true;
+        } else {
+            throw new InvalidResponseException();
         }
 
-        // Exceeder API rate limit
-        if ('SIS0295' == $data['CODIGO'] || '9295' == $data['CODIGO']) {
-            throw new RequestException('Too many requests. "'.$data['CODIGO'].'"', MessageFactoryDiscovery::find()->createRequest('POST', $this->getRequest()->getEndpoint(), ['SOAPAction' => 'trataPeticion']));
-        }
+        $this->returnSignature = $security->createReturnSignature(
+            $data[$this->usingUpcaseResponse ? 'DS_MERCHANTPARAMETERS' : 'Ds_MerchantParameters'],
+            $order,
+            $this->request->getHmacKey()
+        );
 
-        if (isset($data['OPERACION']['DS_ORDER'])) {
-            $this->usingUpcaseResponse = true;
-        }
-
-
-
-        if (!empty($data['OPERACION'])) {
-            if (!empty($data['OPERACION']['Ds_CardNumber'])) {
-                $signature_keys = [
-                    'Ds_Amount',
-                    'Ds_Order',
-                    'Ds_MerchantCode',
-                    'Ds_Currency',
-                    'Ds_Response',
-                    'Ds_CardNumber',
-                    'Ds_TransactionType',
-                    'Ds_SecurePayment',
-                ];
-            } else {
-                $signature_keys = [
-                    'Ds_Amount',
-                    'Ds_Order',
-                    'Ds_MerchantCode',
-                    'Ds_Currency',
-                    'Ds_Response',
-                    'Ds_TransactionType',
-                    'Ds_SecurePayment',
-                ];
-            }
-
-            $signature_data = '';
-            foreach ($signature_keys as $key) {
-                $value = $this->getKey($key);
-                if (null === $value) {
-                    throw new InvalidResponseException('Invalid response from payment gateway (missing data)');
-                }
-                $signature_data .= $value;
-            }
-
-            $this->returnSignature = $security->createSignature(
-                $signature_data,
-                $this->getKey('Ds_Order'),
-                $this->request->getHmacKey()
-            );
-
-            if ($this->returnSignature != $this->getKey('Ds_Signature')) {
-                throw new InvalidResponseException('Invalid response from payment gateway (signature mismatch)');
-            }
+        if ($this->returnSignature != $data[$this->usingUpcaseResponse ? 'DS_SIGNATURE' : 'Ds_Signature']) {
+            throw new InvalidResponseException('Invalid response from payment gateway (signature mismatch)');
         }
     }
 
     /**
+     * Is the response successful?
+     *
      * @return bool
      */
     public function isSuccessful()
     {
-        $response_code = $this->getKey('Ds_Response');
+        $key = $this->usingUpcaseParameters ? 'DS_RESPONSE' : 'Ds_Response';
 
-        if (isset($this->data['CODIGO']) && 'SIS0060' === $this->data['CODIGO']) {
-            return true;
-        }
-
-        // check for field existence as well as value
-        return isset($this->data['CODIGO'])
-            && '0' == $this->data['CODIGO']
-            && null !== $response_code
-            && is_numeric($response_code)
-            && 900 == $response_code;
+        return isset($this->merchantParameters[$key])
+            && is_numeric($this->merchantParameters[$key])
+            && 0 <= $this->merchantParameters[$key]
+            && 100 > $this->merchantParameters[$key];
     }
 
     /**
-     * Helper method to get a specific response parameter if available.
+     * Is the transaction cancelled by the user?
+     *
+     * @return bool
+     */
+    public function isCancelled()
+    {
+        return '9915' === $this->getCode();
+    }
+
+    /**
+     * Get the response data, included the decoded merchant parameters if available.
+     *
+     * @return mixed
+     */
+    public function getData()
+    {
+        $data = parent::getData();
+
+        return is_array($data) && is_array($this->merchantParameters)
+            ? array_merge($data, $this->merchantParameters)
+            : $data;
+    }
+
+    /**
+     * Helper method to get a specific merchant parameter if available.
      *
      * @param string $key The key to look up
      *
@@ -129,11 +127,11 @@ class CompleteAuthorizeResponse extends AbstractResponse
      */
     protected function getKey($key)
     {
-        if ($this->usingUpcaseResponse) {
+        if ($this->usingUpcaseParameters) {
             $key = strtoupper($key);
         }
 
-        return isset($this->data['OPERACION'][$key]) ? $this->data['OPERACION'][$key] : null;
+        return isset($this->merchantParameters[$key]) ? $this->merchantParameters[$key] : null;
     }
 
     /**
@@ -143,7 +141,7 @@ class CompleteAuthorizeResponse extends AbstractResponse
      */
     public function getTransactionReference()
     {
-        return $this->getKey('Ds_AuthorisationCode') ?? $this->request->getParameters()['transactionId'];
+        return $this->getKey('Ds_AuthorisationCode');
     }
 
     /**
@@ -153,13 +151,7 @@ class CompleteAuthorizeResponse extends AbstractResponse
      */
     public function getMessage()
     {
-        $message = $this->redsysMessages->getDsResponseMessage($this->getCode());
-
-        if (null === $message) {
-            $message = $this->redsysMessages->getErrorMessage($this->getCode());
-        }
-
-        return $message;
+        return $this->redsysMessages->getDsResponseMessage($this->getCode());
     }
 
     /**
@@ -169,32 +161,16 @@ class CompleteAuthorizeResponse extends AbstractResponse
      */
     public function getCode()
     {
-        $code = $this->getKey('Ds_Response');
-
-        if (null === $code) {
-            $code = $this->data['CODIGO'];
-        }
-
-        return $code;
+        return $this->getKey('Ds_Response');
     }
 
     /**
-     * Get the merchant data if available.
+     * Get the card type if available.
      *
      * @return string|null
      */
-    public function getMerchantData()
+    public function getCardType()
     {
-        return $this->getKey('Ds_MerchantData');
-    }
-
-    /**
-     * Get the card country if available.
-     *
-     * @return string|null ISO 3166-1 (3-digit numeric) format, if supplied
-     */
-    public function getCardCountry()
-    {
-        return $this->getKey('Ds_Card_Country');
+        return $this->getKey('Ds_Card_Type');
     }
 }

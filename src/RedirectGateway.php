@@ -92,6 +92,11 @@ class RedirectGateway extends AbstractGateway
         return $this->createRequest(\Omnipay\Redsys\Message\CompleteAuthorizeRequest::class, $parameters);
     }
 
+    public function capture(array $parameters = [])
+    {
+        return $this->createRequest(\Omnipay\Redsys\Message\CaptureRequest::class, $parameters);
+    }
+
     public function void(array $parameters = [])
     {
         return $this->createRequest(\Omnipay\Redsys\Message\VoidAuthorizeRequest::class, $parameters);
