@@ -6,7 +6,6 @@ use AvaiBookSports\Component\RedsysMessages\Exception\CatalogNotFoundException;
 use AvaiBookSports\Component\RedsysMessages\Factory;
 use AvaiBookSports\Component\RedsysMessages\Loader\CatalogLoader;
 use Omnipay\Common\Exception\InvalidResponseException;
-use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;
 
 /**
@@ -133,7 +132,7 @@ class WebservicePurchaseResponse extends AbstractResponse
      */
     public function getTransactionReference()
     {
-        return $this->getKey('Ds_AuthorisationCode');
+        return $this->getAuthorisationCode();
     }
 
     /**
