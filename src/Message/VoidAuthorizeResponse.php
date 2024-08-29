@@ -10,7 +10,6 @@ use AvaiBookSports\Component\RedsysMessages\Loader\CatalogLoader;
 use Http\Discovery\MessageFactoryDiscovery;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Http\Exception\RequestException;
-use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;
 
 class VoidAuthorizeResponse extends AbstractResponse
@@ -137,7 +136,7 @@ class VoidAuthorizeResponse extends AbstractResponse
      */
     public function getTransactionReference()
     {
-        return $this->getKey('Ds_AuthorisationCode') ?? $this->request->getParameters()['transactionId'];
+        return $this->getAuthorisationCode() ?? $this->request->getParameters()['transactionId'];
     }
 
     /**
