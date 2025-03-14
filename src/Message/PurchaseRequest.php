@@ -24,7 +24,7 @@ class PurchaseRequest extends AbstractRequest
             'Ds_Merchant_MerchantUrl' => $this->getNotifyUrl(),
             // optional fields
             'Ds_Merchant_ProductDescription' => $this->getDescription(),
-            'Ds_Merchant_MerchantDescription' => substr($this->getDescription(), 0, 25),
+            'Ds_Merchant_MerchantDescriptor' => substr($this->getDescription(), 0, 25),
             'Ds_Merchant_Cardholder' => $this->getCardholder(),
             'Ds_Merchant_UrlOK' => $this->getReturnUrl(),
             'Ds_Merchant_UrlKO' => $this->getCancelUrl() ?: $this->getReturnUrl(),
