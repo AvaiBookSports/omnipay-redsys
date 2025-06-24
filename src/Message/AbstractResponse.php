@@ -22,6 +22,10 @@ abstract class AbstractResponse extends \Omnipay\Common\Message\AbstractResponse
     {
         $value = $this->getKey('Ds_AuthorisationCode');
 
+        if (null === $value) {
+            return null;
+        }
+
         $value = str_replace('+', '', $value);
         $value = trim($value);
 
