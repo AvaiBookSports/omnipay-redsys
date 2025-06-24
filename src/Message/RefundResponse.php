@@ -39,7 +39,7 @@ class RefundResponse extends AbstractResponse
         $security = new Security();
 
         try {
-            $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage(array_key_exists('language', $this->request->getParameters()) ? $this->request->getParameters()['language'] : 'en');
+            $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage(\array_key_exists('language', $this->request->getParameters()) ? $this->request->getParameters()['language'] : 'en');
         } catch (CatalogNotFoundException $e) {
             $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage('en');
         }

@@ -37,7 +37,7 @@ class WebservicePurchaseRequest extends AbstractRequest
             'DS_MERCHANT_CONSUMERLANGUAGE' => $this->getConsumerLanguage(),
         ];
 
-        $request = new SimpleXMLElement('<REQUEST/>');
+        $request = new \SimpleXMLElement('<REQUEST/>');
         $requestData = $request->addChild('DATOSENTRADA');
         foreach ($data as $tag => $value) {
             $requestData->addChild($tag, $value);
@@ -68,7 +68,7 @@ class WebservicePurchaseRequest extends AbstractRequest
     public function sendData($data)
     {
         // re-create the XML
-        $request = new SimpleXMLElement('<REQUEST/>');
+        $request = new \SimpleXMLElement('<REQUEST/>');
         $requestData = $request->addChild('DATOSENTRADA');
         foreach ($data['DATOSENTRADA'] as $tag => $value) {
             $requestData->addChild($tag, $value);
@@ -98,7 +98,7 @@ class WebservicePurchaseRequest extends AbstractRequest
 
         // unwrap httpResponse into actual data as SimpleXMLElement tree
         $responseEnvelope = simplexml_load_string($httpResponse->getBody()->getContents());
-        $responseData = new SimpleXMLElement(htmlspecialchars_decode(
+        $responseData = new \SimpleXMLElement(htmlspecialchars_decode(
             $responseEnvelope->children('http://schemas.xmlsoap.org/soap/envelope/')
             ->Body->children('http://webservice.sis.sermepa.es')
             ->trataPeticionResponse

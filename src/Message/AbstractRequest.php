@@ -85,7 +85,7 @@ abstract class AbstractRequest extends MessageAbstractRequest
     {
         $language = $this->getLanguage() ?: 'en';
 
-        if (!array_key_exists($language, self::$consumerLanguages)) {
+        if (!\array_key_exists($language, self::$consumerLanguages)) {
             $language = 'en';
             // throw new OmnipayException(sprintf('Language "%s" is not supported by the gateway', $language));
         }
@@ -150,7 +150,7 @@ abstract class AbstractRequest extends MessageAbstractRequest
      */
     public function setTransactionId($value)
     {
-        if (strlen($value) > 12) {
+        if (\strlen($value) > 12) {
             throw new RuntimeException('"transactionId" has a maximum length of 12 characters');
         }
 

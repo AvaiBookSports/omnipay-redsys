@@ -12,13 +12,13 @@ class SecurityTest extends TestCase
 
     protected $mockSecurity;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->security = new Security();
         $this->mockSecurity = m::mock('\Omnipay\Redsys\Message\Security');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
@@ -46,8 +46,8 @@ class SecurityTest extends TestCase
      */
     public function testHasValidEncryptionMethod()
     {
-        $this->assertTrue(extension_loaded('openssl'));
-        $this->assertTrue(function_exists('openssl_encrypt'));
+        $this->assertTrue(\extension_loaded('openssl'));
+        $this->assertTrue(\function_exists('openssl_encrypt'));
         $this->assertTrue($this->security->hasValidEncryptionMethod());
     }
 
@@ -56,7 +56,7 @@ class SecurityTest extends TestCase
      */
     public function testEncryptMessageSuccess()
     {
-        $this->mockSecurity->shouldReceive('hasValidEncryptionMethod')->once()->andReturn(true);
+        $this->mockSecurity->expects('hasValidEncryptionMethod')->andReturns(true);
         $cipher = unpack('H*', $this->encryptMessage());
         $this->assertSame('771c1265741bc77139c811410899bb11', $cipher[1]);
     }
@@ -70,7 +70,7 @@ class SecurityTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('No valid encryption extension installed');
-        $this->mockSecurity->shouldReceive('hasValidEncryptionMethod')->once()->andReturn(false);
+        $this->mockSecurity->expects('hasValidEncryptionMethod')->andReturns(false);
         $this->encryptMessage();
     }
 

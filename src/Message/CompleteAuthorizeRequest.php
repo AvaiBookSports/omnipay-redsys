@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Omnipay\Redsys\Message;
 
-use SimpleXMLElement;
-
 class CompleteAuthorizeRequest extends PurchaseRequest
 {
     public function getData()

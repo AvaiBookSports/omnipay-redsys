@@ -69,36 +69,36 @@ class RedirectGateway extends AbstractGateway
 
     public function purchase(array $parameters = [])
     {
-        return $this->createRequest(\Omnipay\Redsys\Message\PurchaseRequest::class, $parameters);
+        return $this->createRequest(Message\PurchaseRequest::class, $parameters);
     }
 
     public function completePurchase(array $parameters = [])
     {
-        return $this->createRequest(\Omnipay\Redsys\Message\CompletePurchaseRequest::class, $parameters);
+        return $this->createRequest(Message\CompletePurchaseRequest::class, $parameters);
     }
 
     public function refund(array $parameters = [])
     {
-        return $this->createRequest(\Omnipay\Redsys\Message\RefundRequest::class, $parameters);
+        return $this->createRequest(Message\RefundRequest::class, $parameters);
     }
 
     public function authorize(array $parameters = [])
     {
-        return $this->createRequest(\Omnipay\Redsys\Message\AuthorizeRequest::class, $parameters);
+        return $this->createRequest(Message\AuthorizeRequest::class, $parameters);
     }
 
     public function completeAuthorize(array $parameters = [])
     {
-        return $this->createRequest(\Omnipay\Redsys\Message\CompleteAuthorizeRequest::class, $parameters);
+        return $this->createRequest(Message\CompleteAuthorizeRequest::class, $parameters);
     }
 
     public function capture(array $parameters = [])
     {
-        return $this->createRequest(\Omnipay\Redsys\Message\CaptureRequest::class, $parameters);
+        return $this->createRequest(Message\CaptureRequest::class, $parameters);
     }
 
     public function void(array $parameters = [])
     {
-        return $this->createRequest(\Omnipay\Redsys\Message\VoidAuthorizeRequest::class, $parameters);
+        return $this->createRequest(Message\VoidAuthorizeRequest::class, $parameters);
     }
 }
