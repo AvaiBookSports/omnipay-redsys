@@ -59,8 +59,8 @@ class Security
 
         if ($this->hasValidEncryptionMethod()) {
             // OpenSSL needs to manually pad $message length to be mod 8 = 0; OPENSSL_ZERO_PADDING option doens't work
-            if (strlen($message) % 8) {
-                $message = str_pad($message, strlen($message) + 8 - strlen($message) % 8, "\0");
+            if (\strlen($message) % 8) {
+                $message = str_pad($message, \strlen($message) + 8 - \strlen($message) % 8, "\0");
             }
             $ciphertext = openssl_encrypt($message, 'des-ede3-cbc', $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, $iv);
         } else {
@@ -77,7 +77,7 @@ class Security
      */
     public function hasValidEncryptionMethod()
     {
-        return extension_loaded('openssl') && function_exists('openssl_encrypt');
+        return \extension_loaded('openssl') && \function_exists('openssl_encrypt');
     }
 
     /**

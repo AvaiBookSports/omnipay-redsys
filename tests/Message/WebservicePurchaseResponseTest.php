@@ -115,12 +115,9 @@ class WebservicePurchaseResponseTest extends TestCase
         $this->assertSame(180, (int) $this->response->getCode());
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testPurchaseInvalidNoReturnCode()
     {
-        $this->getMockRequest()->shouldReceive('getParameters')->once()->andReturn([]);
+        $this->getMockRequest()->expects('getParameters')->andReturns([]);
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (no data)');
@@ -132,12 +129,9 @@ class WebservicePurchaseResponseTest extends TestCase
         );
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testPurchaseInvalidNoTransactionData()
     {
-        $this->getMockRequest()->shouldReceive('getParameters')->once()->andReturn([]);
+        $this->getMockRequest()->expects('getParameters')->andReturns([]);
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (no data)');
@@ -149,12 +143,9 @@ class WebservicePurchaseResponseTest extends TestCase
         );
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testPurchaseIntegrationError()
     {
-        $this->getMockRequest()->shouldReceive('getParameters')->once()->andReturn([]);
+        $this->getMockRequest()->expects('getParameters')->andReturns([]);
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway: "SIS0042');
@@ -166,12 +157,9 @@ class WebservicePurchaseResponseTest extends TestCase
         );
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testCompletePurchaseInvalidNoOrder()
     {
-        $this->getMockRequest()->shouldReceive('getParameters')->once()->andReturn([]);
+        $this->getMockRequest()->expects('getParameters')->andReturns([]);
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway');
@@ -186,12 +174,9 @@ class WebservicePurchaseResponseTest extends TestCase
         );
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testCompletePurchaseInvalidMissingData()
     {
-        $this->getMockRequest()->shouldReceive('getParameters')->once()->andReturn([]);
+        $this->getMockRequest()->expects('getParameters')->andReturns([]);
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (missing data)');
@@ -207,17 +192,13 @@ class WebservicePurchaseResponseTest extends TestCase
         );
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testPurchaseBadSignature()
     {
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (signature mismatch)');
 
-        $this->getMockRequest()
-            ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
-            ->shouldReceive('getParameters')->once()->andReturn([]);
+        $this->getMockRequest()->expects('getHmacKey')->andReturns('Mk9m98IfEblmPfrpsawt7BmxObt98Jev');
+        $this->getMockRequest()->expects('getParameters')->once()->andReturn([]);
 
         $this->response = new WebservicePurchaseResponse(
             $this->getMockRequest(),

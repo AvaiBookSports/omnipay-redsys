@@ -13,7 +13,7 @@ class AbstractRequestTest extends TestCase
      */
     private $abstractRequest;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->abstractRequest = $this->getMockForAbstractClass(AbstractRequest::class, [$this->getHttpClient(), $this->getHttpRequest()]);
     }

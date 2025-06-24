@@ -44,7 +44,7 @@ class CompletePurchaseResponse extends AbstractResponse
         $security = new Security();
 
         try {
-            $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage(array_key_exists('language', $this->request->getParameters()) ? $this->request->getParameters()['language'] : 'en');
+            $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage(\array_key_exists('language', $this->request->getParameters()) ? $this->request->getParameters()['language'] : 'en');
         } catch (CatalogNotFoundException $e) {
             $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage('en');
         }
@@ -112,7 +112,7 @@ class CompletePurchaseResponse extends AbstractResponse
     {
         $data = parent::getData();
 
-        return is_array($data) && is_array($this->merchantParameters)
+        return \is_array($data) && \is_array($this->merchantParameters)
             ? array_merge($data, $this->merchantParameters)
             : $data;
     }

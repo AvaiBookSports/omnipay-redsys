@@ -192,16 +192,13 @@ class CompletePurchaseResponseTest extends TestCase
         $this->runChecks($checks);
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testCompletePurchaseInvalidNoParameters()
     {
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (no data)');
 
         $this->getMockRequest()
-            ->shouldReceive('getParameters')->once()->andReturn([]);
+            ->expects('getParameters')->andReturns([]);
 
         $this->response = new CompletePurchaseResponse(
             $this->getMockRequest(),
@@ -213,16 +210,13 @@ class CompletePurchaseResponseTest extends TestCase
         );
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testCompletePurchaseInvalidNoOrder()
     {
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway');
 
         $this->getMockRequest()
-            ->shouldReceive('getParameters')->once()->andReturn([]);
+            ->expects('getParameters')->andReturns([]);
 
         $this->response = new CompletePurchaseResponse(
             $this->getMockRequest(),
@@ -238,16 +232,13 @@ class CompletePurchaseResponseTest extends TestCase
         );
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testCompletePurchaseInvalidSignature()
     {
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (signature mismatch)');
 
         $this->getMockRequest()
-            ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
+            ->expects('getHmacKey')->andReturns('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
         $this->response = new CompletePurchaseResponse(

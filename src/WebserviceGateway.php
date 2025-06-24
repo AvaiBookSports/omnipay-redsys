@@ -16,11 +16,11 @@ class WebserviceGateway extends RedirectGateway
 
     public function purchase(array $parameters = [])
     {
-        return $this->createRequest(\Omnipay\Redsys\Message\WebservicePurchaseRequest::class, $parameters);
+        return $this->createRequest(Message\WebservicePurchaseRequest::class, $parameters);
     }
 
     public function refund(array $parameters = [])
     {
-        return $this->createRequest(\Omnipay\Redsys\Message\RefundRequest::class, $parameters);
+        return $this->createRequest(Message\RefundRequest::class, $parameters);
     }
 }

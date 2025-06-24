@@ -11,7 +11,7 @@ class WebserviceGatewayTest extends GatewayTestCase
     /** @var array */
     protected $options;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -84,9 +84,6 @@ class WebserviceGatewayTest extends GatewayTestCase
         $this->assertSame(909, (int) $response->getCode());
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testPurchaseInvalid()
     {
         $this->expectException(InvalidResponseException::class);

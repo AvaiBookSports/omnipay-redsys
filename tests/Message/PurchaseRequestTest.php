@@ -9,7 +9,7 @@ class PurchaseRequestTest extends TestCase
     /** @var PurchaseRequest */
     private $request;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
         $this->request->initialize(
