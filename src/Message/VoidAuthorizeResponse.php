@@ -7,7 +7,7 @@ namespace Omnipay\Redsys\Message;
 use AvaiBookSports\Component\RedsysMessages\Exception\CatalogNotFoundException;
 use AvaiBookSports\Component\RedsysMessages\Factory;
 use AvaiBookSports\Component\RedsysMessages\Loader\CatalogLoader;
-use Http\Discovery\MessageFactoryDiscovery;
+use Http\Discovery\Psr17FactoryDiscovery;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Http\Exception\RequestException;
 use Omnipay\Common\Message\RequestInterface;
@@ -46,7 +46,7 @@ class VoidAuthorizeResponse extends AbstractResponse
 
         // Exceeder API rate limit
         if ('SIS0295' == $data['CODIGO'] || '9295' == $data['CODIGO']) {
-            throw new RequestException('Too many requests. "'.$data['CODIGO'].'"', MessageFactoryDiscovery::find()->createRequest('POST', $this->getRequest()->getEndpoint(), ['SOAPAction' => 'trataPeticion']));
+            throw new RequestException('Too many requests. "'.$data['CODIGO'].'"', Psr17FactoryDiscovery::findRequestFactory()->createRequest('POST', $this->getRequest()->getEndpoint())->withHeader('SOAPAction', 'trataPeticion'));
         }
 
         if (isset($data['OPERACION']['DS_ORDER'])) {

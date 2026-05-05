@@ -11,3 +11,7 @@ coding-style-fix:
 .PHONY: static-analysis
 static-analysis:
 	@vendor/bin/phpstan
+
+.PHONY: unit-tests
+unit-tests:
+	@vendor/bin/phpunit --display-all-issues

@@ -15,7 +15,10 @@ class AbstractRequestTest extends TestCase
 
     public function setUp(): void
     {
-        $this->abstractRequest = $this->getMockForAbstractClass(AbstractRequest::class, [$this->getHttpClient(), $this->getHttpRequest()]);
+        $this->abstractRequest = $this->getMockBuilder(AbstractRequest::class)
+            ->setConstructorArgs([$this->getHttpClient(), $this->getHttpRequest()])
+            ->onlyMethods(['getEndpoint', 'getData', 'sendData'])
+            ->getMock();
     }
 
     public function testGetConsumerLanguage()

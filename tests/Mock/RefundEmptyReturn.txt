@@ -1,0 +1,16 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Wed, 9 Nov 2016 19:40:00 GMT
+Content-Type: application/xml;charset=utf-8
+Content-Length: 350
+Connection: keep-alive
+Cache-Control: no-cache, no-store
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <p231:trataPeticionResponse xmlns:p231="http://webservice.sis.sermepa.es">
+      <p231:trataPeticionReturn></p231:trataPeticionReturn>
+    </p231:trataPeticionResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

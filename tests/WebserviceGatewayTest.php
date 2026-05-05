@@ -100,4 +100,20 @@ class WebserviceGatewayTest extends GatewayTestCase
 
         $response = $this->gateway->purchase($this->options)->send();
     }
+
+    public function testRefundWithEmptyTrataPeticionReturnWrapsExceptionAsInvalidResponse()
+    {
+        $this->setMockHttpResponse('RefundEmptyReturn.txt');
+
+        try {
+            $this->gateway->refund($this->options)->send();
+            $this->fail('Expected InvalidResponseException was not thrown');
+        } catch (InvalidResponseException $e) {
+            $this->assertSame(
+                'Invalid response from payment gateway: could not decode response',
+                $e->getMessage()
+            );
+            $this->assertNotNull($e->getPrevious(), 'Original exception should be chained as previous');
+        }
+    }
 }

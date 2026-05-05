@@ -2,6 +2,7 @@
 
 namespace Omnipay\Redsys\Message;
 
+use Omnipay\Common\Exception\InvalidResponseException;
 use SimpleXMLElement;
 
 /**
@@ -91,21 +92,25 @@ class RefundRequest extends AbstractRequest
         );
 
         // unwrap httpResponse into actual data as SimpleXMLElement tree
-        $responseEnvelope = simplexml_load_string($httpResponse->getBody()->getContents());
-        $responseData = new \SimpleXMLElement(htmlspecialchars_decode(
-            $responseEnvelope->children('http://schemas.xmlsoap.org/soap/envelope/')
-            ->Body->children('http://webservice.sis.sermepa.es')
-            ->trataPeticionResponse
-            ->trataPeticionReturn
-        ));
+        try {
+            $responseEnvelope = simplexml_load_string($httpResponse->getBody()->getContents());
+            $responseData = new \SimpleXMLElement(htmlspecialchars_decode(
+                $responseEnvelope->children('http://schemas.xmlsoap.org/soap/envelope/')
+                ->Body->children('http://webservice.sis.sermepa.es')
+                ->trataPeticionResponse
+                ->trataPeticionReturn
+            ));
 
-        // remove any reflected request data (this happens on SIS errors, and includes card number)
-        // if (isset($responseData->RECIBIDO)) {
-        //     unset($responseData->RECIBIDO);
-        // }
+            // remove any reflected request data (this happens on SIS errors, and includes card number)
+            // if (isset($responseData->RECIBIDO)) {
+            //     unset($responseData->RECIBIDO);
+            // }
 
-        // convert to nested arrays (drop the 'true' to use simple objects)
-        $responseData = json_decode(json_encode($responseData), true);
+            // convert to nested arrays (drop the 'true' to use simple objects)
+            $responseData = json_decode(json_encode($responseData), true);
+        } catch (\Throwable $e) {
+            throw new InvalidResponseException('Invalid response from payment gateway: could not decode response', 0, $e);
+        }
 
         return $this->response = new RefundResponse($this, $responseData);
     }
