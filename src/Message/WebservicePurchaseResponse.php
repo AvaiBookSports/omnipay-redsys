@@ -49,13 +49,11 @@ class WebservicePurchaseResponse extends AbstractResponse
         if (!isset($data['OPERACION'])) {
             if ('0' == $data['CODIGO']) {
                 throw new InvalidResponseException('Invalid response from payment gateway (no data)');
-            } else {
-                if (null === $this->getMessage()) {
-                    throw new InvalidResponseException('Invalid response from payment gateway: "'.$this->getCode().'"');
-                } else {
-                    throw new InvalidResponseException('Invalid response from payment gateway: "'.$this->getCode().': '.$this->getMessage().'"');
-                }
             }
+            if (null === $this->getMessage()) {
+                throw new InvalidResponseException('Invalid response from payment gateway: "'.$this->getCode().'"');
+            }
+            throw new InvalidResponseException('Invalid response from payment gateway: "'.$this->getCode().': '.$this->getMessage().'"');
         }
 
         if (isset($data['OPERACION']['DS_ORDER'])) {

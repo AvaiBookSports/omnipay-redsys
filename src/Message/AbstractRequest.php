@@ -154,7 +154,7 @@ abstract class AbstractRequest extends MessageAbstractRequest
             throw new RuntimeException('"transactionId" has a maximum length of 12 characters');
         }
 
-        parent::setTransactionId($value);
+        return parent::setTransactionId($value);
     }
 
     public function getMessageCatalog()

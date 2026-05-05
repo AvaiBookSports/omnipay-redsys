@@ -16,14 +16,8 @@
         "web service",
         "soap"
     ],
-    "homepage": "https://github.com/PatronBase/omnipay-redsys",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Leith Caldwell",
-            "email": "leith@codedruids.com"
-        }
-    ],
+    "authors": [],
     "autoload": {
         "psr-4": { "Omnipay\\Redsys\\" : "src/" }
     },
@@ -31,18 +25,18 @@
         "psr-4": { "Omnipay\\Redsys\\" : "tests/" }
     },
     "require": {
-        "php": "^7.4|8.*",
-        "omnipay/common": "^3.4",
-        "avaibooksports/redsys-messages": "^0.2"
+        "php": "^8.3",
+        "omnipay/common": "^3.5",
+        "avaibooksports/redsys-messages": "^0.2.2"
     },
     "require-dev": {
-        "omnipay/tests": "^4.1",
-        "squizlabs/php_codesniffer": "^3.13",
-        "friendsofphp/php-cs-fixer": "^3.75",
-        "phpunit/phpunit": "^9.6",
+        "omnipay/tests": "^4.2",
+        "squizlabs/php_codesniffer": "^4.0",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpunit/phpunit": "^11.5",
         "phpstan/phpstan": "^2.1",
         "http-interop/http-factory-guzzle": "^1.2",
-        "php-http/react-adapter": "^3.0"
+        "php-http/react-adapter": "^4.0"
     },
     "suggest": {
         "ext-openssl": "Required for hashing functions to check message signatures"
@@ -51,9 +45,6 @@
     "config": {
         "allow-plugins": {
             "php-http/discovery": true
-        },
-        "platform": {
-            "php": "7.4"
         }
     }
 }
