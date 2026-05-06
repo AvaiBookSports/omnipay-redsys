@@ -7,7 +7,6 @@ use AvaiBookSports\Component\RedsysMessages\Exception\CatalogNotFoundException;
 use AvaiBookSports\Component\RedsysMessages\Factory;
 use AvaiBookSports\Component\RedsysMessages\Loader\CatalogLoader;
 use Omnipay\Common\Exception\InvalidResponseException;
-use Omnipay\Common\Message\RequestInterface;
 
 /**
  * Redsys Complete Purchase Response.
@@ -32,12 +31,12 @@ class CompletePurchaseResponse extends AbstractResponse
     /**
      * Constructor.
      *
-     * @param RequestInterface $request the initiating request
-     * @param mixed            $data
+     * @param AbstractRequest $request the initiating request
+     * @param mixed           $data
      *
      * @throws InvalidResponseException If merchant data or order number is missing, or signature does not match
      */
-    public function __construct(RequestInterface $request, $data)
+    public function __construct(AbstractRequest $request, $data)
     {
         parent::__construct($request, $data);
 
@@ -70,7 +69,7 @@ class CompletePurchaseResponse extends AbstractResponse
         $this->returnSignature = $security->createReturnSignature(
             $data[$this->usingUpcaseResponse ? 'DS_MERCHANTPARAMETERS' : 'Ds_MerchantParameters'],
             $order,
-            $this->request->getHmacKey()
+            $request->getHmacKey()
         );
 
         if ($this->returnSignature != $data[$this->usingUpcaseResponse ? 'DS_SIGNATURE' : 'Ds_Signature']) {

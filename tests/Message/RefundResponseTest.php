@@ -2,12 +2,23 @@
 
 namespace Omnipay\Redsys\Message;
 
+use Mockery as m;
 use Omnipay\Tests\TestCase;
 
 class RefundResponseTest extends TestCase
 {
     /** @var RefundResponse */
     private $response;
+
+    private $mockAbstractRequest;
+
+    public function getMockRequest()
+    {
+        if (null === $this->mockAbstractRequest) {
+            $this->mockAbstractRequest = m::mock(AbstractRequest::class);
+        }
+        return $this->mockAbstractRequest;
+    }
 
     public function testUnknowLanguage()
     {

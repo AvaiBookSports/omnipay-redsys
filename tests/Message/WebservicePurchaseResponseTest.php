@@ -2,6 +2,7 @@
 
 namespace Omnipay\Redsys\Message;
 
+use Mockery as m;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Tests\TestCase;
 
@@ -9,6 +10,16 @@ class WebservicePurchaseResponseTest extends TestCase
 {
     /** @var WebservicePurchaseResponse */
     private $response;
+
+    private $mockWsRequest;
+
+    public function getMockRequest()
+    {
+        if (null === $this->mockWsRequest) {
+            $this->mockWsRequest = m::mock(WebservicePurchaseRequest::class);
+        }
+        return $this->mockWsRequest;
+    }
 
     public function testPurchaseSuccess()
     {

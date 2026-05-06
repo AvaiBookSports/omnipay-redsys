@@ -2,6 +2,7 @@
 
 namespace Omnipay\Redsys;
 
+use Omnipay\Common\Message\RedirectResponseInterface;
 use Omnipay\Tests\GatewayTestCase;
 
 class RedirectGatewayTest extends GatewayTestCase
@@ -36,6 +37,7 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertFalse($response->isSuccessful());
         $this->assertTrue($response->isRedirect());
         $this->assertNull($response->getTransactionReference());
+        $this->assertInstanceOf(RedirectResponseInterface::class, $response);
         $this->assertEquals('https://sis-t.redsys.es:25443/sis/realizarPago', $response->getRedirectUrl());
     }
 

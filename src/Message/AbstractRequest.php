@@ -69,7 +69,7 @@ abstract class AbstractRequest extends MessageAbstractRequest
     /**
      * Set the language presented to the consumer.
      *
-     * @param string ISO 639-1 code
+     * @param string $value ISO 639-1 code
      */
     public function setLanguage($value)
     {

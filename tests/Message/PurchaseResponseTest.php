@@ -2,12 +2,23 @@
 
 namespace Omnipay\Redsys\Message;
 
+use Mockery as m;
 use Omnipay\Tests\TestCase;
 
 class PurchaseResponseTest extends TestCase
 {
     /** @var PurchaseResponse */
     private $response;
+
+    private $mockAbstractRequest;
+
+    public function getMockRequest()
+    {
+        if (null === $this->mockAbstractRequest) {
+            $this->mockAbstractRequest = m::mock(AbstractRequest::class);
+        }
+        return $this->mockAbstractRequest;
+    }
 
     /**
      * Set up for the tests in this class.
@@ -32,6 +43,8 @@ class PurchaseResponseTest extends TestCase
      */
     public function setUp(): void
     {
+        $this->getMockRequest()->shouldReceive('getEndpoint')->andReturn('https://sis-t.redsys.es:25443/sis/realizarPago');
+
         $this->response = new PurchaseResponse($this->getMockRequest(), [
             'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
             'Ds_MerchantParameters' => 'eyJEc19NZXJjaGFudF9NZXJjaGFudENvZGUiOiI5OTkwMDg4ODEiLCJEc19NZXJjaGFudF9UZXJtaW5'
@@ -48,9 +61,6 @@ class PurchaseResponseTest extends TestCase
 
     public function testPurchaseSuccess()
     {
-        $this->getMockRequest()->shouldReceive('getEndpoint')->once()
-            ->andReturn('https://sis-t.redsys.es:25443/sis/realizarPago');
-
         $this->assertFalse($this->response->isSuccessful());
         $this->assertTrue($this->response->isRedirect());
         $this->assertSame('https://sis-t.redsys.es:25443/sis/realizarPago', $this->response->getRedirectUrl());

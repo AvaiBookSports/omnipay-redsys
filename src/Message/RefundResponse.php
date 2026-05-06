@@ -2,13 +2,13 @@
 
 namespace Omnipay\Redsys\Message;
 
+use AvaiBookSports\Component\RedsysMessages\CatalogInterface;
 use AvaiBookSports\Component\RedsysMessages\Exception\CatalogNotFoundException;
 use AvaiBookSports\Component\RedsysMessages\Factory;
 use AvaiBookSports\Component\RedsysMessages\Loader\CatalogLoader;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Http\Exception\RequestException;
-use Omnipay\Common\Message\RequestInterface;
 
 /**
  * Redsys Purchase Response.
@@ -21,18 +21,17 @@ class RefundResponse extends AbstractResponse
     /** @var bool */
     protected $usingUpcaseResponse = false;
 
-    /** @var CatalogInterface */
-    protected $redsysMessages;
+    protected CatalogInterface $redsysMessages;
 
     /**
      * Constructor.
      *
-     * @param RequestInterface $request the initiating request
-     * @param mixed            $data
+     * @param AbstractRequest $request the initiating request
+     * @param mixed           $data
      *
      * @throws InvalidResponseException If resopnse format is incorrect, data is missing, or signature does not match
      */
-    public function __construct(RequestInterface $request, $data)
+    public function __construct(AbstractRequest $request, $data)
     {
         parent::__construct($request, $data);
 
@@ -56,7 +55,7 @@ class RefundResponse extends AbstractResponse
 
         // Exceeder API rate limit
         if ('SIS0295' == $data['CODIGO'] || '9295' == $data['CODIGO']) {
-            throw new RequestException('Too many requests. "'.$data['CODIGO'].'"', Psr17FactoryDiscovery::findRequestFactory()->createRequest('POST', $this->getRequest()->getEndpoint())->withHeader('SOAPAction', 'trataPeticion'));
+            throw new RequestException('Too many requests. "'.$data['CODIGO'].'"', Psr17FactoryDiscovery::findRequestFactory()->createRequest('POST', $request->getEndpoint())->withHeader('SOAPAction', 'trataPeticion'));
         }
 
         if (isset($data['OPERACION']['DS_ORDER'])) {
@@ -99,7 +98,7 @@ class RefundResponse extends AbstractResponse
             $this->returnSignature = $security->createSignature(
                 $signature_data,
                 $this->getKey('Ds_Order'),
-                $this->request->getHmacKey()
+                $request->getHmacKey()
             );
 
             if ($this->returnSignature != $this->getKey('Ds_Signature')) {

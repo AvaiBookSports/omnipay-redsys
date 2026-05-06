@@ -2,11 +2,11 @@
 
 namespace Omnipay\Redsys\Message;
 
+use AvaiBookSports\Component\RedsysMessages\CatalogInterface;
 use AvaiBookSports\Component\RedsysMessages\Exception\CatalogNotFoundException;
 use AvaiBookSports\Component\RedsysMessages\Factory;
 use AvaiBookSports\Component\RedsysMessages\Loader\CatalogLoader;
 use Omnipay\Common\Exception\InvalidResponseException;
-use Omnipay\Common\Message\RequestInterface;
 
 /**
  * Redsys Purchase Response.
@@ -19,18 +19,17 @@ class WebservicePurchaseResponse extends AbstractResponse
     /** @var bool */
     protected $usingUpcaseResponse = false;
 
-    /** @var CatalogInterface */
-    protected $redsysMessages;
+    protected CatalogInterface $redsysMessages;
 
     /**
      * Constructor.
      *
-     * @param RequestInterface $request the initiating request
+     * @param WebservicePurchaseRequest $request the initiating request
      * @param mixed            $data
      *
      * @throws InvalidResponseException If resopnse format is incorrect, data is missing, or signature does not match
      */
-    public function __construct(RequestInterface $request, $data)
+    public function __construct(WebservicePurchaseRequest $request, $data)
     {
         parent::__construct($request, $data);
 
@@ -86,7 +85,7 @@ class WebservicePurchaseResponse extends AbstractResponse
         $this->returnSignature = $security->createSignature(
             $signature_data,
             $order,
-            $this->request->getHmacKey()
+            $request->getHmacKey()
         );
 
         if ($this->returnSignature != $this->GetKey('Ds_Signature')) {

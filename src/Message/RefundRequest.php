@@ -2,6 +2,7 @@
 
 namespace Omnipay\Redsys\Message;
 
+use AvaiBookSports\Component\RedsysMessages\CatalogInterface;
 use Omnipay\Common\Exception\InvalidResponseException;
 use SimpleXMLElement;
 
@@ -12,8 +13,7 @@ class RefundRequest extends AbstractRequest
 {
     use WebserviceTrait;
 
-    /** @var CatalogInterface */
-    protected $redsysMessages;
+    protected CatalogInterface $redsysMessages;
 
     public function getData()
     {
