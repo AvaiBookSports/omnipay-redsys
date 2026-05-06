@@ -16,7 +16,7 @@ class SecurityTest extends TestCase
     public function setUp(): void
     {
         $this->security = new Security();
-        $this->mockSecurity = m::mock(\Omnipay\Redsys\Message\Security::class);
+        $this->mockSecurity = m::mock(Security::class);
     }
 
     public function tearDown(): void
@@ -24,7 +24,7 @@ class SecurityTest extends TestCase
         m::close();
     }
 
-    public function testEncodeMerchantParameters()
+    public function testEncodeMerchantParameters(): void
     {
         $this->assertSame(
             'eyJ0ZXN0X3RoaW5nIjoic29tZS1tZXNzYWdlIn0=',
@@ -32,7 +32,7 @@ class SecurityTest extends TestCase
         );
     }
 
-    public function testDecodeMerchantParameters()
+    public function testDecodeMerchantParameters(): void
     {
         $this->assertSame(
             ['test_thing' => 'some-message'],
@@ -45,7 +45,7 @@ class SecurityTest extends TestCase
      *
      * Checks are split out in case only one is failing, rather than the blanket true/false for both
      */
-    public function testHasValidEncryptionMethod()
+    public function testHasValidEncryptionMethod(): void
     {
         $this->assertTrue(\extension_loaded('openssl'));
         $this->assertTrue(\function_exists('openssl_encrypt'));
@@ -55,7 +55,7 @@ class SecurityTest extends TestCase
     /**
      * Test successful message encryption.
      */
-    public function testEncryptMessageSuccess()
+    public function testEncryptMessageSuccess(): void
     {
         $this->mockSecurity->expects('hasValidEncryptionMethod')->andReturns(true);
         $cipher = unpack('H*', (string) $this->encryptMessage());
@@ -65,7 +65,7 @@ class SecurityTest extends TestCase
     /**
      * Make sure correct exception fires when no valid extension is installed.
      */
-    public function testEncryptMessageException()
+    public function testEncryptMessageException(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('No valid encryption extension installed');
@@ -76,7 +76,7 @@ class SecurityTest extends TestCase
     /**
      * Helper method to test protected encryptMessage() method.
      */
-    protected function encryptMessage()
+    protected function encryptMessage(): mixed
     {
         $class = new \ReflectionClass($this->mockSecurity);
         $method = $class->getMethod('encryptMessage');
@@ -87,7 +87,7 @@ class SecurityTest extends TestCase
     /**
      * Test signature creation with XML string and order number.
      */
-    public function testCreateSignature()
+    public function testCreateSignature(): void
     {
         $message = '<DATOSENTRADA>'
             .'<DS_MERCHANT_AMOUNT>145</DS_MERCHANT_AMOUNT>'
@@ -109,7 +109,7 @@ class SecurityTest extends TestCase
     /**
      * Test return signature creation with XML string and order number.
      */
-    public function testCreateReturnSignature()
+    public function testCreateReturnSignature(): void
     {
         $message = '<DATOSENTRADA>'
             .'<DS_MERCHANT_AMOUNT>145</DS_MERCHANT_AMOUNT>'

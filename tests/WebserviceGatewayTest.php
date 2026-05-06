@@ -29,7 +29,7 @@ class WebserviceGatewayTest extends GatewayTestCase
         ];
     }
 
-    public function testPurchaseSuccess()
+    public function testPurchaseSuccess(): void
     {
         $this->setMockHttpResponse('WebservicePurchaseSuccess.txt');
 
@@ -48,7 +48,7 @@ class WebserviceGatewayTest extends GatewayTestCase
         $this->assertSame(0, (int) $response->getCode());
     }
 
-    public function testPurchaseFailure()
+    public function testPurchaseFailure(): void
     {
         $this->setMockHttpResponse('WebservicePurchaseFailure.txt');
 
@@ -66,7 +66,7 @@ class WebserviceGatewayTest extends GatewayTestCase
         $this->assertSame(180, (int) $response->getCode());
     }
 
-    public function testPurchaseError()
+    public function testPurchaseError(): void
     {
         $this->setMockHttpResponse('WebservicePurchaseError.txt');
 
@@ -84,7 +84,7 @@ class WebserviceGatewayTest extends GatewayTestCase
         $this->assertSame(909, (int) $response->getCode());
     }
 
-    public function testPurchaseInvalid()
+    public function testPurchaseInvalid(): void
     {
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway: "SIS0438');
@@ -101,7 +101,7 @@ class WebserviceGatewayTest extends GatewayTestCase
         $response = $this->gateway->purchase($this->options)->send();
     }
 
-    public function testRefundWithEmptyTrataPeticionReturnWrapsExceptionAsInvalidResponse()
+    public function testRefundWithEmptyTrataPeticionReturnWrapsExceptionAsInvalidResponse(): void
     {
         $this->setMockHttpResponse('RefundEmptyReturn.txt');
 

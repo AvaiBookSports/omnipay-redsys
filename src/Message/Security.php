@@ -25,7 +25,7 @@ class Security
      *
      * @return string Encoded data
      */
-    public function encodeMerchantParameters($data)
+    public function encodeMerchantParameters($data): string
     {
         return base64_encode(json_encode($data));
     }
@@ -52,7 +52,7 @@ class Security
      *
      * @throws RuntimeException
      */
-    protected function encryptMessage($message, $key)
+    protected function encryptMessage($message, $key): string|false
     {
         $key = base64_decode($key);
         $iv = implode('', array_map(chr(...), [0, 0, 0, 0, 0, 0, 0, 0]));
@@ -72,10 +72,8 @@ class Security
 
     /**
      * Check if the system has a valid encryption method available.
-     *
-     * @return bool
      */
-    public function hasValidEncryptionMethod()
+    public function hasValidEncryptionMethod(): bool
     {
         return \extension_loaded('openssl') && \function_exists('openssl_encrypt');
     }
@@ -91,7 +89,7 @@ class Security
      *
      * @return string Generated signature
      */
-    public function createSignature($message, $salt, $key)
+    public function createSignature($message, $salt, $key): string
     {
         $ciphertext = $this->encryptMessage($salt, $key);
 
@@ -107,7 +105,7 @@ class Security
      *
      * @return string Generated signature
      */
-    public function createReturnSignature($message, $salt, $key)
+    public function createReturnSignature($message, $salt, $key): string
     {
         return strtr($this->createSignature($message, $salt, $key), '+/', '-_');
     }

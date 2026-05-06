@@ -7,8 +7,7 @@ use Omnipay\Tests\TestCase;
 
 class WebservicePurchaseRequestTest extends TestCase
 {
-    /** @var WebservicePurchaseRequest */
-    private $request;
+    private WebservicePurchaseRequest $request;
 
     #[\Override]
     public function setUp(): void
@@ -39,7 +38,7 @@ class WebservicePurchaseRequestTest extends TestCase
         );
     }
 
-    public function testGetData()
+    public function testGetData(): void
     {
         $data = $this->request->getData();
 
@@ -65,12 +64,12 @@ class WebservicePurchaseRequestTest extends TestCase
         $this->assertSame('iqlFsIxsox35H0yHuaTiZeZ3Ok/4C8omyCuK698gKjI=', $data['DS_SIGNATURE']);
     }
 
-    public function testGetHmacKey()
+    public function testGetHmacKey(): void
     {
         $this->assertSame('Mk9m98IfEblmPfrpsawt7BmxObt98Jev', $this->request->getHmacKey());
     }
 
-    public function testGetDataTestMode()
+    public function testGetDataTestMode(): void
     {
         $this->request->setTestMode(true);
         $this->assertSame('https://sis-t.redsys.es:25443/sis/services/SerClsWSEntrada', $this->request->getEndpoint());

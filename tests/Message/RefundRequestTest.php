@@ -26,7 +26,7 @@ class RefundRequestTest extends TestCase
         );
     }
 
-    public function testGetData()
+    public function testGetData(): void
     {
         $data = $this->request->getData();
 
@@ -42,12 +42,12 @@ class RefundRequestTest extends TestCase
         $this->assertSame('yXqkc11wm11PhQTosOH7TlPVE2w8IWH6iAqn/N6fb1w=', $data['DS_SIGNATURE']);
     }
 
-    public function testGetHmacKey()
+    public function testGetHmacKey(): void
     {
         $this->assertSame('Mk9m98IfEblmPfrpsawt7BmxObt98Jev', $this->request->getHmacKey());
     }
 
-    public function testGetDataTestMode()
+    public function testGetDataTestMode(): void
     {
         $this->request->setTestMode(true);
         $this->assertSame('https://sis-t.redsys.es:25443/sis/services/SerClsWSEntrada', $this->request->getEndpoint());
@@ -55,7 +55,7 @@ class RefundRequestTest extends TestCase
         $this->assertSame('https://sis.redsys.es/sis/services/SerClsWSEntrada', $this->request->getEndpoint());
     }
 
-    public function testSendDataSuccess()
+    public function testSendDataSuccess(): void
     {
         $this->setMockHttpResponse('RefundSuccess.txt');
 
@@ -68,7 +68,7 @@ class RefundRequestTest extends TestCase
         $this->assertSame(900, (int) $response->getCode());
     }
 
-    public function testSendDataError()
+    public function testSendDataError(): void
     {
         $this->setMockHttpResponse('RefundError.txt');
 
@@ -80,7 +80,7 @@ class RefundRequestTest extends TestCase
         $this->assertSame(180, (int) $response->getCode());
     }
 
-    public function testSendDataEmptyReturnWrapsExceptionAsInvalidResponse()
+    public function testSendDataEmptyReturnWrapsExceptionAsInvalidResponse(): void
     {
         $this->setMockHttpResponse('RefundEmptyReturn.txt');
 

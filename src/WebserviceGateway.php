@@ -10,7 +10,7 @@ namespace Omnipay\Redsys;
 class WebserviceGateway extends RedirectGateway
 {
     #[\Override]
-    public function getName()
+    public function getName(): string
     {
         return 'Redsys Webservice';
     }

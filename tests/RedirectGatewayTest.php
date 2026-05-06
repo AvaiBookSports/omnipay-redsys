@@ -30,7 +30,7 @@ class RedirectGatewayTest extends GatewayTestCase
         ];
     }
 
-    public function testPurchase()
+    public function testPurchase(): void
     {
         $response = $this->gateway->purchase($this->options)->send();
 
@@ -41,7 +41,7 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertEquals('https://sis-t.redsys.es:25443/sis/realizarPago', $response->getRedirectUrl());
     }
 
-    public function testCompletePurchaseSuccess()
+    public function testCompletePurchaseSuccess(): void
     {
         $this->getHttpRequest()->request->replace(
             [
@@ -64,7 +64,7 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertSame(0, (int) $response->getCode());
     }
 
-    public function testCompletePurchaseFailure()
+    public function testCompletePurchaseFailure(): void
     {
         $this->getHttpRequest()->request->replace(
             [
@@ -86,7 +86,7 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertSame(180, (int) $response->getCode());
     }
 
-    public function testCompletePurchaseError()
+    public function testCompletePurchaseError(): void
     {
         $this->getHttpRequest()->request->replace(
             [
@@ -107,7 +107,7 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertSame(909, (int) $response->getCode());
     }
 
-    public function testRefundSuccess()
+    public function testRefundSuccess(): void
     {
         $this->setMockHttpResponse('RefundSuccess.txt');
 
@@ -119,7 +119,7 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertSame(900, (int) $response->getCode());
     }
 
-    public function testRefundError()
+    public function testRefundError(): void
     {
         $this->setMockHttpResponse('RefundError.txt');
 

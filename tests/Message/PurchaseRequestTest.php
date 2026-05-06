@@ -6,8 +6,7 @@ use Omnipay\Tests\TestCase;
 
 class PurchaseRequestTest extends TestCase
 {
-    /** @var PurchaseRequest */
-    private $request;
+    private PurchaseRequest $request;
 
     #[\Override]
     public function setUp(): void
@@ -33,7 +32,7 @@ class PurchaseRequestTest extends TestCase
         );
     }
 
-    public function testGetData()
+    public function testGetData(): void
     {
         $data = $this->request->getData();
 
@@ -54,7 +53,7 @@ class PurchaseRequestTest extends TestCase
         $this->assertSame('Ref: 99zz', $data['Ds_Merchant_MerchantData']);
     }
 
-    public function testGetDataTestMode()
+    public function testGetDataTestMode(): void
     {
         $this->request->setTestMode(true);
         $this->assertSame('https://sis-t.redsys.es:25443/sis/realizarPago', $this->request->getEndpoint());
@@ -62,12 +61,12 @@ class PurchaseRequestTest extends TestCase
         $this->assertSame('https://sis.redsys.es/sis/realizarPago', $this->request->getEndpoint());
     }
 
-    public function testGetHmacKey()
+    public function testGetHmacKey(): void
     {
         $this->assertSame('Mk9m98IfEblmPfrpsawt7BmxObt98Jev', $this->request->getHmacKey());
     }
 
-    public function testSetLanguage()
+    public function testSetLanguage(): void
     {
         $this->request->setLanguage('es');
         $this->assertSame('001', $this->request->getConsumerLanguage());

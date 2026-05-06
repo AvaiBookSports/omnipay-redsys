@@ -5,13 +5,11 @@ namespace Omnipay\Redsys\Message;
 use AvaiBookSports\Component\RedsysMessages\CatalogInterface;
 use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AbstractRequestTest extends TestCase
 {
-    /**
-     * @var AbstractRequest
-     */
-    private $abstractRequest;
+    private MockObject&AbstractRequest $abstractRequest;
 
     #[\Override]
     public function setUp(): void
@@ -22,7 +20,7 @@ class AbstractRequestTest extends TestCase
             ->getMock();
     }
 
-    public function testGetConsumerLanguage()
+    public function testGetConsumerLanguage(): void
     {
         $this->abstractRequest->setLanguage('es');
         $this->assertSame('001', $this->abstractRequest->getConsumerLanguage());
@@ -40,7 +38,7 @@ class AbstractRequestTest extends TestCase
         $this->assertSame('002', $this->abstractRequest->getConsumerLanguage());
     }
 
-    public function testGetTransactionId()
+    public function testGetTransactionId(): void
     {
         $this->abstractRequest->setTransactionId('0abc124');
         $this->assertSame('0abc124', $this->abstractRequest->getTransactionId());
@@ -49,14 +47,14 @@ class AbstractRequestTest extends TestCase
         $this->assertSame('0123456789ab', $this->abstractRequest->getTransactionId());
     }
 
-    public function testGetTransactionIdException()
+    public function testGetTransactionIdException(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('"transactionId" has a maximum length of 12 characters');
         $this->abstractRequest->setTransactionId('0123456789abc');
     }
 
-    public function testGetMessageCatalog()
+    public function testGetMessageCatalog(): void
     {
         $this->assertSame(null, $this->abstractRequest->getLanguage());
         $this->assertInstanceOf(CatalogInterface::class, $this->abstractRequest->getMessageCatalog());
