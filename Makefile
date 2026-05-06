@@ -15,3 +15,8 @@ static-analysis:
 .PHONY: unit-tests
 unit-tests:
 	@vendor/bin/phpunit --display-all-issues
+
+.PHONY: rector
+rector:
+	@vendor/bin/rector
+
