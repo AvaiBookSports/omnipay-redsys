@@ -25,7 +25,7 @@ class WebservicePurchaseResponse extends AbstractResponse
      * Constructor.
      *
      * @param WebservicePurchaseRequest $request the initiating request
-     * @param mixed            $data
+     * @param mixed                     $data
      *
      * @throws InvalidResponseException If resopnse format is incorrect, data is missing, or signature does not match
      */

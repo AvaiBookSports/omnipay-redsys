@@ -18,6 +18,7 @@ class WebservicePurchaseResponseTest extends TestCase
         if (null === $this->mockWsRequest) {
             $this->mockWsRequest = m::mock(WebservicePurchaseRequest::class);
         }
+
         return $this->mockWsRequest;
     }
 

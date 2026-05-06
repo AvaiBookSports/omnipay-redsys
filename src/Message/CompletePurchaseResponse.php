@@ -111,7 +111,7 @@ class CompletePurchaseResponse extends AbstractResponse
     {
         $data = parent::getData();
 
-        return \is_array($data) && \is_array($this->merchantParameters)
+        return \is_array($data)
             ? array_merge($data, $this->merchantParameters)
             : $data;
     }

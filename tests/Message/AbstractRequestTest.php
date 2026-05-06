@@ -32,7 +32,7 @@ class AbstractRequestTest extends TestCase
         $this->abstractRequest->setLanguage('fr');
         $this->assertSame('004', $this->abstractRequest->getConsumerLanguage());
 
-        $this->abstractRequest->setLanguage(null);
+        $this->abstractRequest->setLanguage('');
         $this->assertSame('002', $this->abstractRequest->getConsumerLanguage());
 
         $this->abstractRequest->setLanguage('foo');

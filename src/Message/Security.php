@@ -37,7 +37,7 @@ class Security
      *
      * @return array Decoded data
      */
-    public function decodeMerchantParameters($data)
+    public function decodeMerchantParameters($data): array
     {
         return (array) json_decode(base64_decode(strtr($data, '-_', '+/')));
     }

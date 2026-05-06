@@ -61,7 +61,7 @@ abstract class AbstractRequest extends MessageAbstractRequest
      *
      * @return string|null ISO 639-1 code
      */
-    public function getLanguage()
+    public function getLanguage(): ?string
     {
         return $this->getParameter('language');
     }
@@ -71,7 +71,7 @@ abstract class AbstractRequest extends MessageAbstractRequest
      *
      * @param string $value ISO 639-1 code
      */
-    public function setLanguage($value)
+    public function setLanguage(string $value)
     {
         return $this->setParameter('language', $value);
     }

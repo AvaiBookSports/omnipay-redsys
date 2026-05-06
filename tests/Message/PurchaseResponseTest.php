@@ -17,6 +17,7 @@ class PurchaseResponseTest extends TestCase
         if (null === $this->mockAbstractRequest) {
             $this->mockAbstractRequest = m::mock(AbstractRequest::class);
         }
+
         return $this->mockAbstractRequest;
     }
 
