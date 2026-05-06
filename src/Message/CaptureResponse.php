@@ -37,10 +37,8 @@ class CaptureResponse extends AbstractResponse
             throw new InvalidResponseException('Invalid response from payment gateway (no data)');
         }
 
-        if (!isset($data['OPERACION'])) {
-            if ('0' == $data['CODIGO']) {
-                throw new InvalidResponseException('Invalid response from payment gateway (no data)');
-            }
+        if (!isset($data['OPERACION']) && '0' == $data['CODIGO']) {
+            throw new InvalidResponseException('Invalid response from payment gateway (no data)');
         }
 
         // Exceeder API rate limit

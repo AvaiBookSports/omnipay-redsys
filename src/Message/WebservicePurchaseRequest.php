@@ -108,7 +108,7 @@ class WebservicePurchaseRequest extends AbstractRequest
             ));
 
             // remove any reflected request data (this happens on SIS errors, and includes card number)
-            if (isset($responseData->RECIBIDO)) {
+            if (property_exists($responseData, 'RECIBIDO') && null !== $responseData->RECIBIDO) {
                 unset($responseData->RECIBIDO);
             }
 
