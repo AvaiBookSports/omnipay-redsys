@@ -16,8 +16,7 @@ class CompleteAuthorizeResponse extends AbstractResponse
     /** @var array */
     protected $merchantParameters;
 
-    /** @var string */
-    protected $returnSignature;
+    protected string $returnSignature;
 
     /** @var bool */
     protected $usingUpcaseParameters = false;

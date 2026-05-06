@@ -13,8 +13,7 @@ use Omnipay\Common\Exception\InvalidResponseException;
  */
 class WebservicePurchaseResponse extends AbstractResponse
 {
-    /** @var string */
-    protected $returnSignature;
+    protected string $returnSignature;
 
     /** @var bool */
     protected $usingUpcaseResponse = false;

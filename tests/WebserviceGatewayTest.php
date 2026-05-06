@@ -98,7 +98,7 @@ class WebserviceGatewayTest extends GatewayTestCase
             'cvv' => '123',
         ]);
 
-        $response = $this->gateway->purchase($this->options)->send();
+        $this->gateway->purchase($this->options)->send();
     }
 
     public function testRefundWithEmptyTrataPeticionReturnWrapsExceptionAsInvalidResponse(): void
