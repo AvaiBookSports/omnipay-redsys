@@ -9,6 +9,7 @@ class PurchaseRequestTest extends TestCase
     /** @var PurchaseRequest */
     private $request;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());

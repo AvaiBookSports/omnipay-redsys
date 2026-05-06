@@ -55,7 +55,7 @@ class Security
     protected function encryptMessage($message, $key)
     {
         $key = base64_decode($key);
-        $iv = implode(array_map('chr', [0, 0, 0, 0, 0, 0, 0, 0]));
+        $iv = implode('', array_map(chr(...), [0, 0, 0, 0, 0, 0, 0, 0]));
 
         if ($this->hasValidEncryptionMethod()) {
             // OpenSSL needs to manually pad $message length to be mod 8 = 0; OPENSSL_ZERO_PADDING option doens't work

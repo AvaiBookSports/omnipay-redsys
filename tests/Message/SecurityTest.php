@@ -12,10 +12,11 @@ class SecurityTest extends TestCase
 
     protected $mockSecurity;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->security = new Security();
-        $this->mockSecurity = m::mock('\Omnipay\Redsys\Message\Security');
+        $this->mockSecurity = m::mock(\Omnipay\Redsys\Message\Security::class);
     }
 
     public function tearDown(): void
@@ -57,7 +58,7 @@ class SecurityTest extends TestCase
     public function testEncryptMessageSuccess()
     {
         $this->mockSecurity->expects('hasValidEncryptionMethod')->andReturns(true);
-        $cipher = unpack('H*', $this->encryptMessage());
+        $cipher = unpack('H*', (string) $this->encryptMessage());
         $this->assertSame('771c1265741bc77139c811410899bb11', $cipher[1]);
     }
 
@@ -79,7 +80,6 @@ class SecurityTest extends TestCase
     {
         $class = new \ReflectionClass($this->mockSecurity);
         $method = $class->getMethod('encryptMessage');
-        $method->setAccessible(true);
 
         return $method->invokeArgs($this->mockSecurity, ['test message', 'Mk9m98IfEblmPfrpsawt7BmxObt98Jev']);
     }

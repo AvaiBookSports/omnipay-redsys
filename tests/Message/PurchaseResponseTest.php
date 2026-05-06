@@ -12,6 +12,7 @@ class PurchaseResponseTest extends TestCase
 
     private $mockAbstractRequest;
 
+    #[\Override]
     public function getMockRequest()
     {
         if (null === $this->mockAbstractRequest) {
@@ -42,6 +43,7 @@ class PurchaseResponseTest extends TestCase
      *      'Ds_Merchant_ConsumerLanguage'   => '002',
      *      'Ds_Merchant_MerchantData'       => 'Ref: 99zz',
      */
+    #[\Override]
     public function setUp(): void
     {
         $this->getMockRequest()->shouldReceive('getEndpoint')->andReturn('https://sis-t.redsys.es:25443/sis/realizarPago');

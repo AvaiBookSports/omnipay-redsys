@@ -44,7 +44,7 @@ class CompletePurchaseResponse extends AbstractResponse
 
         try {
             $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage(\array_key_exists('language', $this->request->getParameters()) ? $this->request->getParameters()['language'] : 'en');
-        } catch (CatalogNotFoundException $e) {
+        } catch (CatalogNotFoundException) {
             $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage('en');
         }
 
@@ -97,6 +97,7 @@ class CompletePurchaseResponse extends AbstractResponse
      *
      * @return bool
      */
+    #[\Override]
     public function isCancelled()
     {
         return '9915' === $this->getCode();
@@ -107,6 +108,7 @@ class CompletePurchaseResponse extends AbstractResponse
      *
      * @return mixed
      */
+    #[\Override]
     public function getData()
     {
         $data = parent::getData();
@@ -129,7 +131,7 @@ class CompletePurchaseResponse extends AbstractResponse
             $key = strtoupper($key);
         }
 
-        return isset($this->merchantParameters[$key]) ? $this->merchantParameters[$key] : null;
+        return $this->merchantParameters[$key] ?? null;
     }
 
     /**

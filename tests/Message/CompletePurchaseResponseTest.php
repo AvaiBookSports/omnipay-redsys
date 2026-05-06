@@ -13,6 +13,7 @@ class CompletePurchaseResponseTest extends TestCase
 
     private $mockAbstractRequest;
 
+    #[\Override]
     public function getMockRequest()
     {
         if (null === $this->mockAbstractRequest) {

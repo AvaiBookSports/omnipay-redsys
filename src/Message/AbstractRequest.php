@@ -148,9 +148,10 @@ abstract class AbstractRequest extends MessageAbstractRequest
      *
      * @param string|int $value The transaction ID (merchant order) to set for the transaction
      */
+    #[\Override]
     public function setTransactionId($value)
     {
-        if (\strlen($value) > 12) {
+        if (\strlen((string) $value) > 12) {
             throw new RuntimeException('"transactionId" has a maximum length of 12 characters');
         }
 
@@ -161,7 +162,7 @@ abstract class AbstractRequest extends MessageAbstractRequest
     {
         try {
             return (new Factory(new CatalogLoader()))->createCatalogByLanguage($this->getLanguage() ?: 'en');
-        } catch (CatalogNotFoundException $e) {
+        } catch (CatalogNotFoundException) {
             return (new Factory(new CatalogLoader()))->createCatalogByLanguage('en');
         }
     }

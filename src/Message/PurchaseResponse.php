@@ -10,7 +10,7 @@ use Omnipay\Common\Message\RedirectResponseInterface;
  */
 class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
-    private string $redirectUrl;
+    private readonly string $redirectUrl;
 
     public function __construct(AbstractRequest $request, mixed $data)
     {
@@ -23,6 +23,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         return false;
     }
 
+    #[\Override]
     public function isRedirect()
     {
         return true;
@@ -33,11 +34,13 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         return $this->redirectUrl;
     }
 
+    #[\Override]
     public function getRedirectMethod()
     {
         return 'POST';
     }
 
+    #[\Override]
     public function getRedirectData()
     {
         return $this->data;

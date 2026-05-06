@@ -10,6 +10,7 @@ class WebservicePurchaseRequestTest extends TestCase
     /** @var WebservicePurchaseRequest */
     private $request;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->request = new WebservicePurchaseRequest($this->getHttpClient(), $this->getHttpRequest());

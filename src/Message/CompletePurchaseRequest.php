@@ -7,11 +7,13 @@ namespace Omnipay\Redsys\Message;
  */
 class CompletePurchaseRequest extends PurchaseRequest
 {
+    #[\Override]
     public function getData()
     {
         return array_merge($this->httpRequest->query->all(), $this->httpRequest->request->all());
     }
 
+    #[\Override]
     public function sendData($data)
     {
         return $this->response = new CompletePurchaseResponse($this, $data);

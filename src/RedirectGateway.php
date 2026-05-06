@@ -16,6 +16,7 @@ class RedirectGateway extends AbstractGateway
         return 'Redsys Redirect';
     }
 
+    #[\Override]
     public function getDefaultParameters()
     {
         return [

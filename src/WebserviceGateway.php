@@ -9,16 +9,19 @@ namespace Omnipay\Redsys;
  */
 class WebserviceGateway extends RedirectGateway
 {
+    #[\Override]
     public function getName()
     {
         return 'Redsys Webservice';
     }
 
+    #[\Override]
     public function purchase(array $parameters = [])
     {
         return $this->createRequest(Message\WebservicePurchaseRequest::class, $parameters);
     }
 
+    #[\Override]
     public function refund(array $parameters = [])
     {
         return $this->createRequest(Message\RefundRequest::class, $parameters);

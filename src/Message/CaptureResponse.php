@@ -29,7 +29,7 @@ class CaptureResponse extends AbstractResponse
 
         try {
             $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage(\array_key_exists('language', $this->request->getParameters()) ? $this->request->getParameters()['language'] : 'en');
-        } catch (CatalogNotFoundException $e) {
+        } catch (CatalogNotFoundException) {
             $this->redsysMessages = (new Factory(new CatalogLoader()))->createCatalogByLanguage('en');
         }
 
@@ -129,7 +129,7 @@ class CaptureResponse extends AbstractResponse
             $key = strtoupper($key);
         }
 
-        return isset($this->data['OPERACION'][$key]) ? $this->data['OPERACION'][$key] : null;
+        return $this->data['OPERACION'][$key] ?? null;
     }
 
     /**

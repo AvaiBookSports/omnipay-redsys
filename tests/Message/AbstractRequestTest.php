@@ -13,6 +13,7 @@ class AbstractRequestTest extends TestCase
      */
     private $abstractRequest;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->abstractRequest = $this->getMockBuilder(AbstractRequest::class)

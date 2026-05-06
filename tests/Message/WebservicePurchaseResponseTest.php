@@ -13,6 +13,7 @@ class WebservicePurchaseResponseTest extends TestCase
 
     private $mockWsRequest;
 
+    #[\Override]
     public function getMockRequest()
     {
         if (null === $this->mockWsRequest) {
