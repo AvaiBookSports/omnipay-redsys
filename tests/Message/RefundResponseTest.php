@@ -7,9 +7,6 @@ use Omnipay\Tests\TestCase;
 
 class RefundResponseTest extends TestCase
 {
-    /** @var RefundResponse */
-    private $response;
-
     private $mockAbstractRequest;
 
     #[\Override]
@@ -22,13 +19,13 @@ class RefundResponseTest extends TestCase
         return $this->mockAbstractRequest;
     }
 
-    public function testUnknowLanguage()
+    public function testUnknowLanguage(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->andReturn(['language' => 'foo']);
 
-        $this->response = new RefundResponse(
+        new RefundResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -52,13 +49,13 @@ class RefundResponseTest extends TestCase
         );
     }
 
-    public function testRefundSuccess()
+    public function testRefundSuccess(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new RefundResponse(
+        $response = new RefundResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -81,25 +78,25 @@ class RefundResponseTest extends TestCase
             ]
         );
 
-        $this->assertFalse($this->response->isCancelled());
-        $this->assertFalse($this->response->isPending());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertTrue($this->response->isSuccessful());
-        $this->assertFalse($this->response->isTransparentRedirect());
+        $this->assertFalse($response->isCancelled());
+        $this->assertFalse($response->isPending());
+        $this->assertFalse($response->isRedirect());
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isTransparentRedirect());
 
-        $this->assertSame('0900', $this->response->getCode());
-        $this->assertSame('999999', $this->response->getTransactionReference());
-        $this->assertSame(null, $this->response->getMerchantData());
-        $this->assertSame('724', $this->response->getCardCountry());
+        $this->assertSame('0900', $response->getCode());
+        $this->assertSame('999999', $response->getTransactionReference());
+        $this->assertNull($response->getMerchantData());
+        $this->assertSame('724', $response->getCardCountry());
     }
 
-    public function testRefundSuccessUpperResponse()
+    public function testRefundSuccessUpperResponse(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new RefundResponse(
+        $response = new RefundResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -122,22 +119,22 @@ class RefundResponseTest extends TestCase
             ]
         );
 
-        $this->assertFalse($this->response->isCancelled());
-        $this->assertFalse($this->response->isPending());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertTrue($this->response->isSuccessful());
-        $this->assertFalse($this->response->isTransparentRedirect());
+        $this->assertFalse($response->isCancelled());
+        $this->assertFalse($response->isPending());
+        $this->assertFalse($response->isRedirect());
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isTransparentRedirect());
 
-        $this->assertSame('0900', $this->response->getCode());
+        $this->assertSame('0900', $response->getCode());
     }
 
-    public function testRefundSuccessCreditCardSignature()
+    public function testRefundSuccessCreditCardSignature(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new RefundResponse(
+        $response = new RefundResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -161,51 +158,51 @@ class RefundResponseTest extends TestCase
             ]
         );
 
-        $this->assertFalse($this->response->isCancelled());
-        $this->assertFalse($this->response->isPending());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertTrue($this->response->isSuccessful());
-        $this->assertFalse($this->response->isTransparentRedirect());
+        $this->assertFalse($response->isCancelled());
+        $this->assertFalse($response->isPending());
+        $this->assertFalse($response->isRedirect());
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isTransparentRedirect());
 
-        $this->assertSame('0900', $this->response->getCode());
+        $this->assertSame('0900', $response->getCode());
     }
 
-    public function testGetMessage()
+    public function testGetMessage(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new RefundResponse(
+        $response = new RefundResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => 'SIS0057',
             ]
         );
 
-        $this->response->getMessage();
+        $response->getMessage();
     }
 
-    public function testRefundFailureAmountExceeded()
+    public function testRefundFailureAmountExceeded(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new RefundResponse(
+        $response = new RefundResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => 'SIS0057',
             ]
         );
-        $this->assertEquals('SIS0057', $this->response->getCode());
+        $this->assertEquals('SIS0057', $response->getCode());
 
-        $this->assertFalse($this->response->isCancelled());
-        $this->assertFalse($this->response->isPending());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertFalse($this->response->isSuccessful());
-        $this->assertFalse($this->response->isTransparentRedirect());
+        $this->assertFalse($response->isCancelled());
+        $this->assertFalse($response->isPending());
+        $this->assertFalse($response->isRedirect());
+        $this->assertFalse($response->isSuccessful());
+        $this->assertFalse($response->isTransparentRedirect());
     }
 
-    public function testRefundFailureTooManyRequests()
+    public function testRefundFailureTooManyRequests(): void
     {
         $this->expectException(\Omnipay\Common\Http\Exception\RequestException::class);
         $this->expectExceptionMessage('Too many requests. "SIS0295"');
@@ -214,18 +211,11 @@ class RefundResponseTest extends TestCase
             ->shouldReceive('getParameters')->once()->andReturn([])
             ->shouldReceive('getEndpoint')->once()->andReturn('https://sis-t.redsys.es:25443/sis/services/SerClsWSEntrada');
 
-        $this->response = new RefundResponse(
+        new RefundResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => 'SIS0295',
             ]
         );
-        $this->assertEquals('SIS0057', $this->response->getCode());
-
-        $this->assertFalse($this->response->isCancelled());
-        $this->assertFalse($this->response->isPending());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertFalse($this->response->isSuccessful());
-        $this->assertFalse($this->response->isTransparentRedirect());
     }
 }

@@ -7,9 +7,6 @@ use Omnipay\Tests\TestCase;
 
 class PurchaseResponseTest extends TestCase
 {
-    /** @var PurchaseResponse */
-    private $response;
-
     private $mockAbstractRequest;
 
     #[\Override]
@@ -22,33 +19,11 @@ class PurchaseResponseTest extends TestCase
         return $this->mockAbstractRequest;
     }
 
-    /**
-     * Set up for the tests in this class.
-     *
-     * Uses the following data:
-     *
-     *      'Ds_Merchant_MerchantCode'       => '999008881',
-     *      'Ds_Merchant_Terminal'           => '871',
-     *      'Ds_Merchant_TransactionType'    => '0',
-     *      'Ds_Merchant_Amount'             => '145',
-     *      'Ds_Merchant_Currency'           => '978',
-     *      'Ds_Merchant_Order'              => '0123abc',
-     *      'Ds_Merchant_MerchantUrl'        => 'https://www.example.com/notify',
-     *
-     *      'Ds_Merchant_ProductDescription' => 'My sales items',
-     *      'Ds_Merchant_Cardholder'         => 'J Smith',
-     *      'Ds_Merchant_UrlOK'              => 'https://www.example.com/return',
-     *      'Ds_Merchant_UrlKO'              => 'https://www.example.com/return',
-     *      'Ds_Merchant_MerchantName'       => 'My Store',
-     *      'Ds_Merchant_ConsumerLanguage'   => '002',
-     *      'Ds_Merchant_MerchantData'       => 'Ref: 99zz',
-     */
-    #[\Override]
-    public function setUp(): void
+    public function testPurchaseSuccess(): void
     {
         $this->getMockRequest()->shouldReceive('getEndpoint')->andReturn('https://sis-t.redsys.es:25443/sis/realizarPago');
 
-        $this->response = new PurchaseResponse($this->getMockRequest(), [
+        $response = new PurchaseResponse($this->getMockRequest(), [
             'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
             'Ds_MerchantParameters' => 'eyJEc19NZXJjaGFudF9NZXJjaGFudENvZGUiOiI5OTkwMDg4ODEiLCJEc19NZXJjaGFudF9UZXJtaW5'
                 .'hbCI6Ijg3MSIsIkRzX01lcmNoYW50X1RyYW5zYWN0aW9uVHlwZSI6IjAiLCJEc19NZXJjaGFudF9BbW91bnQiOiIxNDUiLCJEc19N'
@@ -60,14 +35,11 @@ class PurchaseResponseTest extends TestCase
                 .'2UiOiIwMDIiLCJEc19NZXJjaGFudF9NZXJjaGFudERhdGEiOiJSZWY6IDk5enoifQ==',
             'Ds_Signature' => 'dEYvw2ti+iUS9+sc1U8klNdLpoFPO08hRRzd9LLmLWs=',
         ]);
-    }
 
-    public function testPurchaseSuccess()
-    {
-        $this->assertFalse($this->response->isSuccessful());
-        $this->assertTrue($this->response->isRedirect());
-        $this->assertSame('https://sis-t.redsys.es:25443/sis/realizarPago', $this->response->getRedirectUrl());
-        $this->assertSame('POST', $this->response->getRedirectMethod());
+        $this->assertFalse($response->isSuccessful());
+        $this->assertTrue($response->isRedirect());
+        $this->assertSame('https://sis-t.redsys.es:25443/sis/realizarPago', $response->getRedirectUrl());
+        $this->assertSame('POST', $response->getRedirectMethod());
         $this->assertSame(
             [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
@@ -81,9 +53,9 @@ class PurchaseResponseTest extends TestCase
                     .'mNoYW50X0NvbnN1bWVyTGFuZ3VhZ2UiOiIwMDIiLCJEc19NZXJjaGFudF9NZXJjaGFudERhdGEiOiJSZWY6IDk5enoifQ==',
                 'Ds_Signature' => 'dEYvw2ti+iUS9+sc1U8klNdLpoFPO08hRRzd9LLmLWs=',
             ],
-            $this->response->getRedirectData()
+            $response->getRedirectData()
         );
-        $this->assertNull($this->response->getTransactionReference());
-        $this->assertNull($this->response->getCode());
+        $this->assertNull($response->getTransactionReference());
+        $this->assertNull($response->getCode());
     }
 }

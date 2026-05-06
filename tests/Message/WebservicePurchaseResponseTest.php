@@ -8,9 +8,6 @@ use Omnipay\Tests\TestCase;
 
 class WebservicePurchaseResponseTest extends TestCase
 {
-    /** @var WebservicePurchaseResponse */
-    private $response;
-
     private $mockWsRequest;
 
     #[\Override]
@@ -23,13 +20,13 @@ class WebservicePurchaseResponseTest extends TestCase
         return $this->mockWsRequest;
     }
 
-    public function testPurchaseSuccess()
+    public function testPurchaseSuccess(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new WebservicePurchaseResponse(
+        $response = new WebservicePurchaseResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -45,26 +42,25 @@ class WebservicePurchaseResponseTest extends TestCase
                     'Ds_TransactionType' => 'A',
                     'Ds_SecurePayment' => '0',
                     'Ds_Language' => '2',
-                    // undocumented
                     'Ds_MerchantData' => 'Ref: 99zz',
                     'Ds_Card_Country' => '724',
                 ],
             ]
         );
 
-        $this->assertTrue($this->response->isSuccessful());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertSame('999999', $this->response->getTransactionReference());
-        $this->assertSame(0, (int) $this->response->getCode());
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('999999', $response->getTransactionReference());
+        $this->assertSame(0, (int) $response->getCode());
     }
 
-    public function testPurchaseSuccessUpperResponse()
+    public function testPurchaseSuccessUpperResponse(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new WebservicePurchaseResponse(
+        $response = new WebservicePurchaseResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -80,28 +76,27 @@ class WebservicePurchaseResponseTest extends TestCase
                     'DS_TRANSACTIONTYPE' => 'A',
                     'DS_SECUREPAYMENT' => '0',
                     'DS_LANGUAGE' => '2',
-                    // undocumented
                     'DS_MERCHANTDATA' => 'Ref: 99zz',
                     'DS_CARD_COUNTRY' => '724',
                 ],
             ]
         );
 
-        $this->assertTrue($this->response->isSuccessful());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertSame('999999', $this->response->getTransactionReference());
-        $this->assertSame(0, (int) $this->response->getCode());
-        $this->assertSame('Ref: 99zz', $this->response->getMerchantData());
-        $this->assertSame(724, (int) $this->response->getCardCountry());
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('999999', $response->getTransactionReference());
+        $this->assertSame(0, (int) $response->getCode());
+        $this->assertSame('Ref: 99zz', $response->getMerchantData());
+        $this->assertSame(724, (int) $response->getCardCountry());
     }
 
-    public function testPurchaseFailure()
+    public function testPurchaseFailure(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new WebservicePurchaseResponse(
+        $response = new WebservicePurchaseResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -117,24 +112,23 @@ class WebservicePurchaseResponseTest extends TestCase
                     'Ds_TransactionType' => 'A',
                     'Ds_SecurePayment' => '0',
                     'Ds_Language' => '2',
-                    // undocumented
                     'Ds_MerchantData' => 'Ref: 99zz',
                     'Ds_Card_Country' => '0',
                 ],
             ]
         );
-        $this->assertFalse($this->response->isSuccessful());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertSame(180, (int) $this->response->getCode());
+        $this->assertFalse($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame(180, (int) $response->getCode());
     }
 
-    public function testPurchaseInvalidNoReturnCode()
+    public function testPurchaseInvalidNoReturnCode(): void
     {
         $this->getMockRequest()->expects('getParameters')->andReturns([]);
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (no data)');
-        $this->response = new WebservicePurchaseResponse(
+        new WebservicePurchaseResponse(
             $this->getMockRequest(),
             [
                 'OPERACION' => [],
@@ -142,13 +136,13 @@ class WebservicePurchaseResponseTest extends TestCase
         );
     }
 
-    public function testPurchaseInvalidNoTransactionData()
+    public function testPurchaseInvalidNoTransactionData(): void
     {
         $this->getMockRequest()->expects('getParameters')->andReturns([]);
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (no data)');
-        $this->response = new WebservicePurchaseResponse(
+        new WebservicePurchaseResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -156,13 +150,13 @@ class WebservicePurchaseResponseTest extends TestCase
         );
     }
 
-    public function testPurchaseIntegrationError()
+    public function testPurchaseIntegrationError(): void
     {
         $this->getMockRequest()->expects('getParameters')->andReturns([]);
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway: "SIS0042');
-        $this->response = new WebservicePurchaseResponse(
+        new WebservicePurchaseResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => 'SIS0042',
@@ -170,13 +164,13 @@ class WebservicePurchaseResponseTest extends TestCase
         );
     }
 
-    public function testCompletePurchaseInvalidNoOrder()
+    public function testCompletePurchaseInvalidNoOrder(): void
     {
         $this->getMockRequest()->expects('getParameters')->andReturns([]);
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway');
-        $this->response = new WebservicePurchaseResponse(
+        new WebservicePurchaseResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -187,13 +181,13 @@ class WebservicePurchaseResponseTest extends TestCase
         );
     }
 
-    public function testCompletePurchaseInvalidMissingData()
+    public function testCompletePurchaseInvalidMissingData(): void
     {
         $this->getMockRequest()->expects('getParameters')->andReturns([]);
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (missing data)');
-        $this->response = new WebservicePurchaseResponse(
+        new WebservicePurchaseResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -205,7 +199,7 @@ class WebservicePurchaseResponseTest extends TestCase
         );
     }
 
-    public function testPurchaseBadSignature()
+    public function testPurchaseBadSignature(): void
     {
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (signature mismatch)');
@@ -213,7 +207,7 @@ class WebservicePurchaseResponseTest extends TestCase
         $this->getMockRequest()->expects('getHmacKey')->andReturns('Mk9m98IfEblmPfrpsawt7BmxObt98Jev');
         $this->getMockRequest()->expects('getParameters')->once()->andReturn([]);
 
-        $this->response = new WebservicePurchaseResponse(
+        new WebservicePurchaseResponse(
             $this->getMockRequest(),
             [
                 'CODIGO' => '0',
@@ -229,7 +223,6 @@ class WebservicePurchaseResponseTest extends TestCase
                     'Ds_TransactionType' => 'A',
                     'Ds_SecurePayment' => '0',
                     'Ds_Language' => '2',
-                    // undocumented
                     'Ds_MerchantData' => 'Ref: 99zz',
                     'Ds_Card_Country' => '724',
                 ],

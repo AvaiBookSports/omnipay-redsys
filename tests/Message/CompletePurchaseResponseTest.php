@@ -8,9 +8,6 @@ use Omnipay\Tests\TestCase;
 
 class CompletePurchaseResponseTest extends TestCase
 {
-    /** @var CompletePurchaseResponse */
-    private $response;
-
     private $mockAbstractRequest;
 
     #[\Override]
@@ -23,13 +20,13 @@ class CompletePurchaseResponseTest extends TestCase
         return $this->mockAbstractRequest;
     }
 
-    public function testCompletePurchaseSuccess()
+    public function testCompletePurchaseSuccess(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new CompletePurchaseResponse(
+        $response = new CompletePurchaseResponse(
             $this->getMockRequest(),
             [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
@@ -43,10 +40,10 @@ class CompletePurchaseResponseTest extends TestCase
             ]
         );
 
-        $this->assertTrue($this->response->isSuccessful());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertSame('999999', $this->response->getTransactionReference());
-        $this->assertSame(0, (int) $this->response->getCode());
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('999999', $response->getTransactionReference());
+        $this->assertSame(0, (int) $response->getCode());
 
         $checks = [
             'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
@@ -66,16 +63,16 @@ class CompletePurchaseResponseTest extends TestCase
             'Ds_Card_Country' => '724', // Spain
             'Ds_Card_Type' => 'C',   // Credit
         ];
-        $this->runChecks($checks);
+        $this->runChecks($response, $checks);
     }
 
-    public function testCompletePurchaseSuccessUpperParameters()
+    public function testCompletePurchaseSuccessUpperParameters(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new CompletePurchaseResponse(
+        $response = new CompletePurchaseResponse(
             $this->getMockRequest(),
             [
                 'DS_SIGNATUREVERSION' => 'HMAC_SHA256_V1',
@@ -89,10 +86,10 @@ class CompletePurchaseResponseTest extends TestCase
             ]
         );
 
-        $this->assertTrue($this->response->isSuccessful());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertSame('999999', $this->response->getTransactionReference());
-        $this->assertSame(0, (int) $this->response->getCode());
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('999999', $response->getTransactionReference());
+        $this->assertSame(0, (int) $response->getCode());
 
         $checks = [
             'DS_SIGNATUREVERSION' => 'HMAC_SHA256_V1',
@@ -112,16 +109,16 @@ class CompletePurchaseResponseTest extends TestCase
             'DS_CARD_COUNTRY' => '724', // Spain
             'DS_CARD_TYPE' => 'C',   // Credit
         ];
-        $this->runChecks($checks);
+        $this->runChecks($response, $checks);
     }
 
-    public function testCompletePurchaseFailure()
+    public function testCompletePurchaseFailure(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new CompletePurchaseResponse(
+        $response = new CompletePurchaseResponse(
             $this->getMockRequest(),
             [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
@@ -135,10 +132,10 @@ class CompletePurchaseResponseTest extends TestCase
             ]
         );
 
-        $this->assertFalse($this->response->isSuccessful());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertSame(180, (int) $this->response->getCode());
-        $this->assertNull($this->response->getCardType());
+        $this->assertFalse($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame(180, (int) $response->getCode());
+        $this->assertNull($response->getCardType());
 
         $checks = [
             'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
@@ -157,16 +154,16 @@ class CompletePurchaseResponseTest extends TestCase
             'Ds_ConsumerLanguage' => '2', // English
             'Ds_Card_Country' => '0',
         ];
-        $this->runChecks($checks);
+        $this->runChecks($response, $checks);
     }
 
-    public function testCompletePurchaseError()
+    public function testCompletePurchaseError(): void
     {
         $this->getMockRequest()
             ->shouldReceive('getHmacKey')->once()->andReturn('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new CompletePurchaseResponse(
+        $response = new CompletePurchaseResponse(
             $this->getMockRequest(),
             [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
@@ -180,10 +177,10 @@ class CompletePurchaseResponseTest extends TestCase
             ]
         );
 
-        $this->assertFalse($this->response->isSuccessful());
-        $this->assertFalse($this->response->isRedirect());
-        $this->assertSame(909, (int) $this->response->getCode());
-        $this->assertNull($this->response->getCardType());
+        $this->assertFalse($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame(909, (int) $response->getCode());
+        $this->assertNull($response->getCardType());
 
         $checks = [
             'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
@@ -202,10 +199,10 @@ class CompletePurchaseResponseTest extends TestCase
             'Ds_ConsumerLanguage' => '2', // English
             'Ds_Card_Country' => '0',
         ];
-        $this->runChecks($checks);
+        $this->runChecks($response, $checks);
     }
 
-    public function testCompletePurchaseInvalidNoParameters()
+    public function testCompletePurchaseInvalidNoParameters(): void
     {
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (no data)');
@@ -213,7 +210,7 @@ class CompletePurchaseResponseTest extends TestCase
         $this->getMockRequest()
             ->expects('getParameters')->andReturns([]);
 
-        $this->response = new CompletePurchaseResponse(
+        new CompletePurchaseResponse(
             $this->getMockRequest(),
             [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
@@ -223,7 +220,7 @@ class CompletePurchaseResponseTest extends TestCase
         );
     }
 
-    public function testCompletePurchaseInvalidNoOrder()
+    public function testCompletePurchaseInvalidNoOrder(): void
     {
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway');
@@ -231,7 +228,7 @@ class CompletePurchaseResponseTest extends TestCase
         $this->getMockRequest()
             ->expects('getParameters')->andReturns([]);
 
-        $this->response = new CompletePurchaseResponse(
+        new CompletePurchaseResponse(
             $this->getMockRequest(),
             [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
@@ -245,7 +242,7 @@ class CompletePurchaseResponseTest extends TestCase
         );
     }
 
-    public function testCompletePurchaseInvalidSignature()
+    public function testCompletePurchaseInvalidSignature(): void
     {
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid response from payment gateway (signature mismatch)');
@@ -254,7 +251,7 @@ class CompletePurchaseResponseTest extends TestCase
             ->expects('getHmacKey')->andReturns('Mk9m98IfEblmPfrpsawt7BmxObt98Jev')
             ->shouldReceive('getParameters')->once()->andReturn([]);
 
-        $this->response = new CompletePurchaseResponse(
+        new CompletePurchaseResponse(
             $this->getMockRequest(),
             [
                 'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
@@ -269,9 +266,9 @@ class CompletePurchaseResponseTest extends TestCase
         );
     }
 
-    private function runChecks($checks)
+    private function runChecks(CompletePurchaseResponse $response, array $checks): void
     {
-        $data = $this->response->getData();
+        $data = $response->getData();
         foreach ($checks as $key => $expected) {
             $this->assertSame($expected, $data[$key]);
         }
