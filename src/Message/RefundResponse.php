@@ -156,7 +156,7 @@ class RefundResponse extends AbstractResponse
         $message = $this->redsysMessages->getDsResponseMessage($this->getCode());
 
         if (null === $message) {
-            $message = $this->redsysMessages->getErrorMessage($this->getCode());
+            return $this->redsysMessages->getErrorMessage($this->getCode());
         }
 
         return $message;
@@ -172,7 +172,7 @@ class RefundResponse extends AbstractResponse
         $code = $this->getKey('Ds_Response');
 
         if (null === $code) {
-            $code = $this->data['CODIGO'];
+            return $this->data['CODIGO'];
         }
 
         return $code;

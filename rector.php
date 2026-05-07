@@ -14,4 +14,5 @@ return RectorConfig::configure()
         typeDeclarations: true,
         deadCode: true,
         codeQuality: true,
+        earlyReturn: true,
     );
